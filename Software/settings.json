@@ -1,4 +1,6 @@
 {
     "broker": "test.mosquitto.org",
-    "port": 1883
+    "port": 1883,
+    "baseTopic": "Patient_Monitor_2022",
+    "telegramToken": "5396367162:AAFu2Tc7J6iqhhxHuAzDdVB3xQCG6OsNXvo"
 }
