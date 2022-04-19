@@ -26,20 +26,20 @@ class HeartRateSensor:
         if range_ == "bradycardia": 
             # message['bn'] = '/'.join((self.patientID,self.sensorID,range_)) 
             message['e']['value'] = np.random.exponential(scale=3,size=None)+40 
-            message['e']['timestamp'] = time.strftime("%H:%M:%S") 
+            message['e']['timestamp'] = time.time
             self.client.myPublish(self.topic,message) 
             print("published") 
         elif range_ == "normal": 
             # message['bn'] = '/'.join((self.patientID,self.sensorID,range_)) 
             loc, scale=80, 3
             message['e']['value'] = np.random.logistic(loc, scale,size=None) 
-            message['e']['timestamp'] = time.strftime("%H:%M:%S") 
+            message['e']['timestamp'] = time.time
             self.client.myPublish(self.topic,message) 
             print("published") 
         elif range_ == "tachycardia": 
             # message['bn'] = '/'.join((self.patientID,self.sensorID,range_)) 
             message['e']['value'] = np.random.exponential(scale=15,size=None)+100
-            message['e']['timestamp'] = time.strftime("%H:%M:%S") 
+            message['e']['timestamp'] = time.time
             self.client.myPublish(self.topic,message) 
             print("published") 
  

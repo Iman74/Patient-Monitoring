@@ -24,19 +24,19 @@ class RoomTempratureSensor:
         if range_ == "cold room":
             # message['bn'] = '/'.join((self.patientID, self.sensorID ,range_))
             message['e']['value'] = round(random.uniform(16,19.9), 1)        #the second argument is the number of decimals
-            message['e']['timestamp'] = time.strftime("%H:%M:%S")
+            message['e']['timestamp'] = time.time
             self.client.myPublish(self.topic,message)
             print("published")
         elif range_ == "normal room":
             # message['bn'] = '/'.join((self.patientID,self.sensorID,range_))
             message['e']['value'] = round(random.uniform(20,22), 1)
-            message['e']['timestamp'] = time.strftime("%H:%M:%S")
+            message['e']['timestamp'] = time.time
             self.client.myPublish(self.topic,message)
             print("published")
         elif range_ == "hot room":
             # message['bn'] = '/'.join((self.patientID,self.sensorID,range_))
             message['e']['value'] = round(random.uniform(22.1, 25), 1)
-            message['e']['timestamp'] = time.strftime("%H:%M:%S")
+            message['e']['timestamp'] = time.time
             self.client.myPublish(self.topic,message)
             print("published")
 

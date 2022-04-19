@@ -26,25 +26,25 @@ class BodyTempratureSensor:
         if range_ == "hypothermia":
             # message['bn'] = '/'.join((self.patientID,self.sensorID,range_))
             message['e']['value'] = round(random.uniform(33,35.5), 1)        #the second argument is the number of decimals
-            message['e']['timestamp'] = time.strftime("%H:%M:%S")
+            message['e']['timestamp'] = time.time
             self.client.myPublish(self.topic,message)
             print("published")
         elif range_ == "normal":
             # message['bn'] = '/'.join((self.patientID,self.sensorID,range_))
             message['e']['value'] = round(random.uniform(35.6,37.4), 1)
-            message['e']['timestamp'] = time.strftime("%H:%M:%S")
+            message['e']['timestamp'] = time.time
             self.client.myPublish(self.topic,message)
             print("published")
         elif range_ == "fever":
             # message['bn'] = '/'.join((self.patientID,self.sensorID,range_))
             message['e']['value'] = round(random.uniform(37.5, 39.4), 1)
-            message['e']['timestamp'] = time.strftime("%H:%M:%S")
+            message['e']['timestamp'] = time.time
             self.client.myPublish(self.topic,message)
             print("published")
         elif range_ == "highfever":
             # message['bn'] = '/'.join((self.patientID,self.sensorID,range_))
             message['e']['value'] = round(random.uniform(39.5, 42), 1)
-            message['e']['timestamp'] = time.strftime("%H:%M:%S")
+            message['e']['timestamp'] = time.time
             self.client.myPublish(self.topic,message)
             print("published")
 

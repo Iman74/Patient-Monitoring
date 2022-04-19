@@ -24,19 +24,19 @@ class OxygenSensor:
         if range_ == "normal": 
             # message['bn'] = '/'.join((self.patientID,self.sensorID,range_)) 
             message['e']['value'] = round(random.uniform(95,100), 0)        #the second argument is the number of decimals 
-            message['e']['timestamp'] = time.strftime("%H:%M:%S") 
+            message['e']['timestamp'] = time.time
             self.client.myPublish(self.topic,message) 
             print("published") 
         elif range_ == "hypoxia": 
             # message['bn'] = '/'.join((self.patientID,self.sensorID,range_)) 
             message['e']['value'] = round(random.uniform(85,94), 0) 
-            message['e']['timestamp'] = time.strftime("%H:%M:%S") 
+            message['e']['timestamp'] = time.time 
             self.client.myPublish(self.topic,message) 
             print("published") 
         elif range_ == "acute_respiratory_failure": 
             # message['bn'] = '/'.join((self.patientID,self.sensorID,range_)) 
             message['e']['value'] = round(random.uniform(50, 84), 0)   #don't know if the minimum should be changed!!
-            message['e']['timestamp'] = time.strftime("%H:%M:%S") 
+            message['e']['timestamp'] = time.time 
             self.client.myPublish(self.topic,message) 
             print("published") 
     
