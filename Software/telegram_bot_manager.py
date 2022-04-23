@@ -39,7 +39,8 @@ class TelegramBot:
                 self.bot.sendMessage(chat_ID, text="Command is not supported!")
         else:
                 self.bot.sendMessage(chat_ID, text="Message format is not supported! Use only text")
-        
+
+
     def notify(self,topic,message):
         print(message)
         msg=json.loads(message)
@@ -49,6 +50,16 @@ class TelegramBot:
         tosend=f"ATTENTION!!!\n{alert}, you should {action}"
         for chat_ID in self.chatIDs:
             self.bot.sendMessage(chat_ID, text=tosend)
+
+    def on_callback_query(self,msg):
+        query_ID, chat_ID, query_data=telepot.glance(msg,flavor='callback_query')
+        user=query_data
+        if user=="patient":
+            self.bot.sendMessage(chat_ID, text='Insert your identification number')
+        elif user=="doctor":
+            self.bot.sendMessage(chat_ID, text='Insert your identification number')
+        else:
+            self.bot.sendMessage(chat_ID, text='Invalid operation')
 
 
 if __name__ == "__main__":
