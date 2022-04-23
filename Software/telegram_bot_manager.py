@@ -9,7 +9,7 @@ from telepot.namedtuple import InlineKeyboardButton, InlineKeyboardMarkup
 from MyMQTT import *
 
 
-class TelgramBot:
+class TelegramBot:
     exposed=True
     def __init__(self, token):
         # Local token
@@ -23,7 +23,7 @@ class TelgramBot:
         # self.topic = topic
         # self.client.mySubscribe(topic)
         # self.__message={"alert":"","action":""}
-        MessageLoop(self.bot, {'chat': self.on_chat_message}).run_as_thread()
+        MessageLoop(self.bot, {'chat': self.on_chat_message, 'callback_query': self.on_callback_query}).run_as_thread()
 
     def on_chat_message(self, msg):
         content_type, chat_type, chat_ID = telepot.glance(msg)
@@ -32,10 +32,13 @@ class TelgramBot:
             message = msg['text']
             if message=="/start":
                 self.bot.sendMessage(chat_ID, text="Welcome")
+                buttons=[[InlineKeyboardButton(text=f'Patient🧑', callback_data=f'patient'),InlineKeyboardButton(text=f'Doctor🩺', callback_data=f'doctor')]]
+                keyboard=InlineKeyboardMarkup(inline_keyboard=buttons)
+                self.bot.sendMessage(chat_ID, text='Select the category you belong to', reply_markup=keyboard)
             else:
-                self.bot.sendMessage(chat_ID, text="Command is not supported !")
+                self.bot.sendMessage(chat_ID, text="Command is not supported!")
         else:
-                self.bot.sendMessage(chat_ID, text="Massage format is not supported ! use only text")
+                self.bot.sendMessage(chat_ID, text="Message format is not supported! Use only text")
         
     def notify(self,topic,message):
         print(message)
@@ -46,6 +49,7 @@ class TelgramBot:
         tosend=f"ATTENTION!!!\n{alert}, you should {action}"
         for chat_ID in self.chatIDs:
             self.bot.sendMessage(chat_ID, text=tosend)
+
 
 if __name__ == "__main__":
     conf = json.load(open("settings.json"))
@@ -64,7 +68,7 @@ if __name__ == "__main__":
     # input("press a key to start...")
     # test=MyMQTT("testIoTBot",broker,port,None)
     # test.start()
-    tst = TelgramBot(token)
+    tst = TelegramBot(token)
     while True:
         time.sleep(1)
     # topic = "orlando/alert/temp"
