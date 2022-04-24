@@ -1,0 +1,68 @@
+{
+	"patients": [{
+		"id": "0001",
+		"name": "Tony",
+		"surname": "Stark",
+		"age": "53",
+		"values": [{	
+				"n":"heartRate",
+				"v": 75,
+				"t": 0,
+				"u": "bpm"
+			},
+			{	
+				"n":"heartRate",
+				"v": 88,
+				"t": 20,
+				"u": "bpm"
+			},
+			{
+				"n":"heartRate",
+				"v": "65",
+				"t": "30",
+				"u": "bpm"
+			},
+
+			{
+				"n":"oxygen",
+				"v": "98",
+				"t": "30",
+				"u": "bpm"
+			},
+			{
+				"n":"oxygen",
+				"v": "100",
+				"t": "1",
+				"u": "bpm"
+			},
+			{
+				"n":"oxygen",
+				"v": "90",
+				"t": "31",
+				"u": "bpm"
+			},
+			{
+				"n":"bodyTemperature",
+				"v": "90",
+				"t": "89",
+				"u": "bpm"
+			},
+			{
+				"n":"roomTemperature",
+				"v": "95",
+				"t": "89",
+				"u": "bpm"
+			},
+			{
+				"n":"roomTemperature",
+				"v": "69",
+				"t": "125",
+				"u": "bpm"
+			},
+			{
+				"n":"roomTemperature",
+				"v": "65",
+				"t": "165",
+				"u": "bpm"
+			}
+]}]}
