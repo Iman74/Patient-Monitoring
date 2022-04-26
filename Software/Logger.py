@@ -64,8 +64,7 @@ class Raspberry_Pie_Logger:
             # read current database
             with open(self.databaseName, "r") as jsonFile:
                 try:
-                    x=json.load(jsonFile)
-                    database = _Database.from_json(x)
+                    database = _Database.from_json(json.load(jsonFile))
                     patientExisted = False
                     for patient in database.patients:
                         if patient.patientID == patientID:
