@@ -1,0 +1,104 @@
+{
+    "lastUpdate": "04-05-2022 22:39:28",
+    "doctorsList": [
+        {
+            "name": "Sheldon Cooper",
+            "userID": 456789,
+            "password": 333,
+            "telegramID": 123,
+            "patientsList": [
+                {
+                    "name": "Tony Stark",
+                    "userID": 1,
+                    "password": 123,
+                    "telegramID": 123456,
+                    "thingspeak_chID": 123456,
+                    "thingspeak_rkey": "",
+                    "thingspeak_wkey": "",
+                    "devicesList": [
+                        {
+                            "deviceID": 1,
+                            "deviceName": "DHT11",
+                            "measureType": "Temperature",
+                            "availableServices": "MQTT",
+                            "servicesDetails": [
+                                {
+                                    "serviceType": "MQTT",
+                                    "serviceIP": "mqtt.mosquittos.org",
+                                    "topic": [
+                                        "/bodytemperature"
+                                    ]
+                                }
+                            ],
+                            "lastUpdate": "04-05-2022 19:17:34"
+                        },
+                        {
+                            "deviceID": 2,
+                            "deviceName": "VCNL4010",
+                            "measureType": [
+                                "Oxygen Saturation"
+                            ],
+                            "availableServices": [
+                                "MQTT"
+                            ],
+                            "servicesDetails": [
+                                {
+                                    "serviceType": "MQTT",
+                                    "serviceIP": "mqtt.eclipse.org",
+                                    "topic": [
+                                        "/oxygen"
+                                    ]
+                                }
+                            ],
+                            "lastUpdate": "2020-03-30",
+                            "timestamp": "04-05-2022 21:33:49"
+                        }
+                    ]
+                },
+                {
+                    "name": "Steve Rogers",
+                    "userID": 2,
+                    "password": 321654,
+                    "telegramID": 456,
+                    "thingspeak_chID": 245,
+                    "thingspeak_rkey": "",
+                    "thingspeak_wkey": "",
+                    "devicesList": []
+                }
+            ]
+        },
+        {
+            "name": "Mario Rossi",
+            "userID": 3,
+            "password": "oky",
+            "telegramID": 123,
+            "patientsList": [
+                {
+                    "name": "Silvia Polizzi",
+                    "userID": "17",
+                    "password": "okk",
+                    "telegramID": "987",
+                    "patientsList": []
+                }
+            ]
+        },
+        {
+            "name": "John Watson",
+            "userID": "777",
+            "password": "ok",
+            "telegramID": "789",
+            "patientsList": []
+        }
+    ],
+    "microservices": [
+        {
+            "name": "OpenWindows",
+            "endpoint": "192.123.123:9090",
+            "protocol": "MQTT"
+        }
+    ],
+    "IP": "",
+    "port": 1883,
+    "telegramToken": "5396367162:AAFu2Tc7J6iqhhxHuAzDdVB3xQCG6OsNXvo",
+    "broker": "test.mosquitto.org"
+}
