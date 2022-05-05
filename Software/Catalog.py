@@ -119,7 +119,7 @@ class Catalog:
 				for doctor in range(len(doctors)):
 					for patient in range(len(doctors[doctor]["patientsList"])):
 						for device in range(len(doctors[doctor]["patientsList"][patient]["devicesList"])):
-							if new['deviceID'] == doctors[doctor]["patientsList"][patient]["devicesList"][device]['deviceID']:
+							if new['deviceID'] == doctors[doctor]["patientsList"][patient]["devicesList"][device]["deviceID"]:
 								doctors[doctor]["patientsList"][patient]["devicesList"][device] = new
 								self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
 								doctors[doctor]["patientsList"][patient]["devicesList"][device]["lastUpdate"] = time.strftime("%d-%m-%Y %H:%M:%S")
@@ -389,17 +389,20 @@ class Catalog:
 				patients["patients"].append(self.file["doctorsList"][doctor]["patientsList"][patient])
 		return patients
 				
+
+								
 # Removes all the devices with timestamp higher than two minutes. 
-# 	def deleteOld(self):
-# 		#file=json.load(open(self.filename, encoding="utf-8"))
-# 		devices = self.file['devicesList']
-# 		for device in range(len(devices)):
-# 			if int(time.mktime(time.strptime(devices[device]['lastUpdate'],"%d-%m-%Y %H:%M:%S"))) + 60*2 < time.time():
-# 				del devices[device]
-# 				self.file['devicesList'] = devices
-# 				json.dump(self.file,open(self.filename,"w"))
-# 			else:
-# 				pass
+def deleteOld(addressCatalog):
+	doctors = requests.get(addressCatalog+"/doctors")
+	doctors = doctors.json()
+	for doctor in range(len(doctors['doctors'])):
+		for patient in range(len(doctors['doctors'][doctor]["patientsList"])):
+			devices = doctors['doctors'][doctor]["patientsList"][patient]["devicesList"]
+			for device in range(len(devices)):
+				if int(time.mktime(time.strptime(devices[device]['lastUpdate'],"%d-%m-%Y %H:%M:%S"))) + 60*2 < time.time():
+					requests.delete(addressCatalog+'/device/'+str(devices[device]['deviceID']))
+				else:
+					pass			
 
 def addDev(json_file=0):
 	if json_file:
@@ -501,11 +504,12 @@ def upDev(addressCatalog,json_file=0):
 	else:
 		deviceID = input("Insert the deviceID: ")
 		new = requests.get(addressCatalog+'/device/'+deviceID)
+		new = new.json()
 		while True:
 			command = input("What param do you want to update?\n n:\t name\n m:\t measure type\n a:\t available services\n d:\t service details\
 				\n q:\t quit\n")
 			if command == 'n':
-				new["deviceName"] = (input("Insert the device name: ")).split(" ")
+				new["deviceName"] = input("Insert the device name: ")
 			elif command == 'm':
 				new["measureType"] = (input("Write all types of measurements by separating them with a space: ")).split(" ")
 			elif command == 'a':
@@ -600,9 +604,8 @@ def upServ(addressCatalog,json_file=0):
 				print("This command doesn't exists, retry:\n")
 	return new
 
-def main():
-	settings = json.load(open("settings.json", encoding="utf-8"))
-	addressCatalog = settings["catalog_address"]
+def main(addressCatalog):
+	
 	print("Welcome in the Catalog Adaptor.\n")
 	while True: 
 		command=input('Do you want to update, add or delete an entry?\n Available commands:\n a:\t add\n u:\t update\n d:\t delete\n q:\t quit\n')
@@ -617,7 +620,7 @@ def main():
 					if command == 'j':
 						filename_new=input("Insert name of the json: ")
 						new_user=json.load(open(fielename_new, encoding="utf-8"))
-						payload = addDoc(new_user)
+						payload= addDoc(new_user)
 						r = requests.post(addressCatalog+"/doctor", json=payload)
 						# print the response of the request 
 						print(r.text)
@@ -637,12 +640,12 @@ def main():
 					if command == 'j':
 						filename_new=input("Insert name of the json: ")
 						new_user=json.load(open(fielename_new, encoding="utf-8"))
-						payload = addDoc(new_user)
+						payload = addPatient(new_user)
 						r = requests.post(addressCatalog+"/patient/"+userID, json=payload)
 						print(r.text)
 
 					elif command == 'cm':
-						payload = addDoc()
+						payload = addPatient()
 						r = requests.post(addressCatalog+"/patient/"+userID, json=payload)
 						print(r.text)
 					elif command == 'q':
@@ -726,11 +729,11 @@ def main():
 				if command == 'j':
 					filename_new=input("Insert name of the json: ")
 					new_dev=json.load(open(fielename_new, encoding="utf-8"))
-					payload,userID = upDev(addressCatalog,new_dev)
+					payload = upDev(addressCatalog,new_dev)
 					r = requests.put(addressCatalog+"/device", json=payload)
 					print(r.text)
 				elif command == 'cm':
-					payload,userID = upDev(addressCatalog)
+					payload= upDev(addressCatalog)
 					r = requests.put(addressCatalog+"/device", json=payload)
 					print(r.text)
 				elif command == 'q':
@@ -782,7 +785,8 @@ def main():
 	return
 
 if __name__=="__main__":
-
+	settings = json.load(open("settings.json", encoding="utf-8"))
+	addressCatalog = settings["catalog_address"]
 	conf={
 		'/':{
 			'request.dispatch':cherrypy.dispatch.MethodDispatcher(),  
@@ -795,5 +799,9 @@ if __name__=="__main__":
 	cherrypy.config.update({'server.socket_port':9090})
 	cherrypy.config.update(conf)
 	cherrypy.engine.start()
-	main()
+	main(addressCatalog)
+	while True:
+		time.sleep(60)
+		deleteOld(addressCatalog)
+		
 	cherrypy.engine.block()

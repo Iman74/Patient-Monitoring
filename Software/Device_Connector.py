@@ -7,7 +7,6 @@ from MyMQTT import *
 
 # Here the sensor search itself in the Catalog to see to which patient own.
 def find_me(deviceID):
-    # get dei patients
     founded = False
     settings = json.load(open("settings.json", encoding="utf-8"))
     addressCatalog = settings["catalog_address"]
@@ -25,20 +24,18 @@ def find_me(deviceID):
                    raise StopIteration
         except StopIteration:
             break
-    
-        
 
-    # else registra 
     return patientID
 
 def update_me(deviceID,info_sensor):
     settings = json.load(open("settings.json", encoding="utf-8"))
     addressCatalog = settings["catalog_address"]
-    payload = json.dumps(info_sensor)
+    #payload = json.dumps(info_sensor)
+    payload = info_sensor
     r = requests.put(addressCatalog+"/device", json=payload)
     # update to stay "alive" in the catalog and update the timestamp
 
-def HeartRateSensor(sensorID,broker):
+def HeartRateSensor(range_,sensorID,broker):
     info_sensor = {
                 "deviceID": sensorID,
                 "deviceName": "SensorHR",
@@ -62,7 +59,6 @@ def HeartRateSensor(sensorID,broker):
                 'e': 
                     {'n': 'heartrate', 'v': '', 't': '', 'u': 'bpm'}
             } 
-        range_=input('\nAvailable range:\nbradycardia\nnormal\ntachycardia\nquit\n') 
         condition = False  
         while range_ !='quit': 
             if range_=='bradycardia' or range_=='normal' or range_=='tachycardia': 
@@ -84,7 +80,7 @@ def HeartRateSensor(sensorID,broker):
         return message
     else:
         return "Device not registered for any patient"
-def RoomTempratureSensor(sensorID,broker):
+def RoomTempratureSensor(range_,sensorID,broker):
     info_sensor = {
                 "deviceID": sensorID,
                 "deviceName": "SensorRT",
@@ -108,7 +104,7 @@ def RoomTempratureSensor(sensorID,broker):
                 'e':
                     {'n': 'room temperature', 'v': '', 't': '', 'u': '°C'}
             }
-        range_=input('\nAvailable range:\ncold room\nnormal room\nhot room\nquit\n')
+        
         condition = False 
         while range_ !='quit':
             if range_=='cold room' or range_=='normal room' or range_=='hot room':
@@ -130,7 +126,7 @@ def RoomTempratureSensor(sensorID,broker):
     else:
         return "Device not registered for any patient"
 
-def OxygenSensor(sensorID,broker):
+def OxygenSensor(range_,sensorID,broker):
     info_sensor = {
                 "deviceID": sensorID,
                 "deviceName": "SensorHR",
@@ -154,7 +150,6 @@ def OxygenSensor(sensorID,broker):
                 'e': 
                     {'n': 'oxygen', 'v': '', 't': '', 'u': '%'}
             }
-        range_=input('\nAvailable range:\nnormal\nhypoxia\nacute_respiratory_failure\nquit\n') 
         condition = False  
         while range_ !='quit': 
             if range_=='normal' or range_=='hypoxia' or range_=='acute_respiratory_failure': 
@@ -174,7 +169,7 @@ def OxygenSensor(sensorID,broker):
         return message
     else:
         return "Device not registered for any patient"
-def BodyTempratureSensor(sensorID,broker):
+def BodyTempratureSensor(range_,sensorID,broker):
     info_sensor = {
                 "deviceID": sensorID,
                 "deviceName": "SensorBT",
@@ -198,7 +193,6 @@ def BodyTempratureSensor(sensorID,broker):
                 'e':
                     {'n': 'body temperature', 'v': '', 't': '', 'u': '°C'}
             }
-        range_=input('\nAvailable range:\nhypothermia\nnormal\nfever\nhighfever\nquit\n')
         condition = False 
         while range_ !='quit':
             if range_=='hypothermia' or range_=='normal' or range_=='fever' or range_=='highfever':
@@ -267,7 +261,6 @@ class Publisher:
 
             elif t == "/saturation":
                 patientID, sensorID = message_o['bn'].split('/')
-                print(patientID)
                 message = self.__message
                 message['bn'] = '/'.join((patientID,sensorID,t))
                 message['e']['n'] = 'saturation'
@@ -276,7 +269,6 @@ class Publisher:
                 message['e']['u'] = '%'
             topic_ = '/'.join((baseTopic,patientID,sensorID))
             topic_ = topic_+t
-            print(message)
             json.dumps(message)
             self.client.myPublish(topic_,message)
             print(f"\nPublished on {topic_}")
@@ -303,11 +295,15 @@ if __name__ == "__main__":
     sensor = Publisher(baseTopic,["/roomTemperature","/bodyTemperature",
                           "/heartRate","/saturation"], broker, port)
     sensor.start()
+    range_h=input('\nAvailable range:\nbradycardia\nnormal\ntachycardia\nquit\n') 
+    range_rT = input('\nAvailable range:\ncold room\nnormal room\nhot room\nquit\n')
+    range_bT = input('\nAvailable range:\nhypothermia\nnormal\nfever\nhighfever\nquit\n')
+    range_o = input('\nAvailable range:\nnormal\nhypoxia\nacute_respiratory_failure\nquit\n') 
     while True:
-        message_h = HeartRateSensor(sensorID_h,broker)
-        message_rT = RoomTempratureSensor(sensorID_rT,broker)
-        message_bT = BodyTempratureSensor(sensorID_bT,broker)
-        message_o = OxygenSensor(sensorID_o,broker)
+        message_h = HeartRateSensor(range_h,sensorID_h,broker)
+        message_rT = RoomTempratureSensor(range_rT,sensorID_rT,broker)
+        message_bT = BodyTempratureSensor(range_bT,sensorID_bT,broker)
+        message_o = OxygenSensor(range_o,sensorID_o,broker)
         if message_o == "Device not registered for any patient" or message_rT == "Device not registered for any patient" or message_bT == "Device not registered for any patient" or message_h == "Device not registered for any patient":
             print('A sensor is not registered in the catalog.')
             break  
