@@ -72,15 +72,7 @@
             "userID": 3,
             "password": "oky",
             "telegramID": 123,
-            "patientsList": [
-                {
-                    "name": "Silvia Polizzi",
-                    "userID": "17",
-                    "password": "okk",
-                    "telegramID": "987",
-                    "patientsList": []
-                }
-            ]
+            "patientsList": []
         },
         {
             "name": "John Watson",
