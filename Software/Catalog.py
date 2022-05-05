@@ -12,6 +12,7 @@ class Catalog:
 		self.file["broker"] = self.settings["broker"]
 		self.file["port"] = self.settings["port"]
 		self.file["telegramToken"] = self.settings["telegramToken"]
+		self.file["baseTopic"] = self.settings["baseTopic"]
 		json.dump(self.file,open(self.filename,"w"),indent=4)
 
 	def GET(self,*uri,**params):
@@ -89,12 +90,18 @@ class Catalog:
 				if founded != True:
 					return "Microservice not founded"
 
-			elif str(uri[0]) =='ip':
-				IP = self.file['broker']
-				return IP
+			elif str(uri[0]) =='broker':
+				broker = self.file['broker']
+				return broker
 			elif str(uri[0]) =='port':
 				port = self.file['port']
 				return str(port)
+			elif str(uri[0]) == 'token':
+				token = self.file['telegramToken']
+				return str(token)
+			elif str(uri[0]) == 'base_topic':
+				topic = self.file['baseTopic']
+				return str(topic)
 			else:
 				raise cherrypy.HTTPError(404,"The uri entered is incorrect.")
 		else:
@@ -407,8 +414,8 @@ def addDev(json_file=0):
 				}
 		new["deviceID"] = input("Insert the deviceID: ")
 		new["deviceName"] = input("Insert the device name: ")
-		new["measureType"] = split(" ",input("Write all types of measurements by separating them with a space: "))
-		new["availableServices"] = split(" ",input("Write all services available by separating them with a space: "))
+		new["measureType"] = (input("Write all types of measurements by separating them with a space: ")).split(" ")
+		new["availableServices"] = (input("Write all services available by separating them with a space: ")).split(" ")
 		
 		for service in range(len(new["availableServices"])):
 			newS = {
@@ -416,12 +423,12 @@ def addDev(json_file=0):
 					"serviceIP": "",
 					}
 			if "MQTT" == new["availableServices"][service]:
-				topic = split(" ",input("Write all the topics of service "+service+" by separating them with a space: "))
+				topic = (input("Write all the topics of service "+str(service)+" by separating them with a space: ")).split(" ")
 				newS["topic"] = topic
 				newS["serviceType"] = "MQTT"
 			elif "REST" == new["availableServices"][service]:
 				newS["serviceType"] = "REST"
-			newS["serviceIP"] = input("What is the IP of the service "+service+"?")
+			newS["serviceIP"] = input("What is the IP of the service "+str(service)+"?")
 			new["servicesDetails"].append(newS)
 	return new
 
@@ -498,11 +505,11 @@ def upDev(addressCatalog,json_file=0):
 			command = input("What param do you want to update?\n n:\t name\n m:\t measure type\n a:\t available services\n d:\t service details\
 				\n q:\t quit\n")
 			if command == 'n':
-				new["deviceName"] = input("Insert the device name: ")
+				new["deviceName"] = (input("Insert the device name: ")).split(" ")
 			elif command == 'm':
-				new["measureType"] = split(" ",input("Write all types of measurements by separating them with a space: "))
+				new["measureType"] = (input("Write all types of measurements by separating them with a space: ")).split(" ")
 			elif command == 'a':
-				new["availableServices"] = split(" ",input("Write all services available by separating them with a space: "))
+				new["availableServices"] =( input("Write all services available by separating them with a space: ")).split(" ")
 				# HERE WE WANT ALSO ADD DETAILS OF THE NEW SERVICES?
 			elif command == 'd':
 				service == input("Write the name of the service you want to update details.")
@@ -511,12 +518,12 @@ def upDev(addressCatalog,json_file=0):
 							"serviceIP": "",
 							}
 				if "MQTT" == new["availableServices"][service]:
-					topic = split(" ",input("Write all the topics of service "+service+" by separating them with a space: "))
+					topic = (input("Write all the topics of service "+str(service)+" by separating them with a space: ")).split(" ")
 					newS["topic"] = topic
 					newS["serviceType"] = "MQTT"
 				elif "REST" == new["availableServices"][service]:
 					newS["serviceType"] = "REST"
-				newS["serviceIP"] = input("What is the IP of the service "+service+"?")
+				newS["serviceIP"] = input("What is the IP of the service "+str(service)+"?")
 				new["servicesDetails"].append(newS)
 			elif command == 'q':
 				break

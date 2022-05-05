@@ -1,5 +1,5 @@
 {
-    "lastUpdate": "04-05-2022 22:39:28",
+    "lastUpdate": "05-05-2022 17:32:20",
     "doctorsList": [
         {
             "name": "Sheldon Cooper",
@@ -51,7 +51,77 @@
                                 }
                             ],
                             "lastUpdate": "2020-03-30",
-                            "timestamp": "04-05-2022 21:33:49"
+                            "timestamp": "05-05-2022 17:29:50"
+                        },
+                        {
+                            "deviceID": "s_0x01",
+                            "deviceName": "sensorO",
+                            "measureType": [
+                                "saturation"
+                            ],
+                            "availableServices": [
+                                "MQTT"
+                            ],
+                            "servicesDetails": [
+                                {
+                                    "serviceType": "MQTT",
+                                    "serviceIP": "123",
+                                    "topic": [
+                                        "/saturation"
+                                    ]
+                                }
+                            ],
+                            "timestamp": "05-05-2022 17:31:18"
+                        },
+                        {
+                            "deviceID": "s_0x02",
+                            "deviceName": "boh",
+                            "measureType": [
+                                "ok"
+                            ],
+                            "availableServices": [
+                                "ok"
+                            ],
+                            "servicesDetails": [
+                                {
+                                    "serviceType": "ok",
+                                    "serviceIP": "123"
+                                }
+                            ],
+                            "timestamp": "05-05-2022 17:31:57"
+                        },
+                        {
+                            "deviceID": "s_0x03",
+                            "deviceName": "ok",
+                            "measureType": [
+                                "ok"
+                            ],
+                            "availableServices": [
+                                "ok"
+                            ],
+                            "servicesDetails": [
+                                {
+                                    "serviceType": "ok",
+                                    "serviceIP": "456"
+                                }
+                            ],
+                            "timestamp": "05-05-2022 17:32:20"
+                        },
+                        {
+                            "deviceID": "s_0x04",
+                            "deviceName": "ok",
+                            "measureType": [
+                                "ok"
+                            ],
+                            "availableServices": [
+                                "ok"
+                            ],
+                            "servicesDetails": [
+                                {
+                                    "serviceType": "ok",
+                                    "serviceIP": "123"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -89,8 +159,8 @@
             "protocol": "MQTT"
         }
     ],
-    "IP": "",
-    "port": 1883,
     "telegramToken": "5396367162:AAFu2Tc7J6iqhhxHuAzDdVB3xQCG6OsNXvo",
-    "broker": "test.mosquitto.org"
+    "broker": "test.mosquitto.org",
+    "port": 1883,
+    "baseTopic": "Patient_Monitor_2022"
 }
