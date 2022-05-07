@@ -143,7 +143,8 @@ class Catalog:
 					for doctor in range(len(doctors)):
 						if new['userID'] == doctors[doctor]['userID']:
 							doctors[doctor] = new
-							json.dump(self.file,open(self.filename,"w"))
+							self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
+							json.dump(self.file,open(self.filename,"w"),indent=4)
 							founded = True
 							return "User updated"
 							break
