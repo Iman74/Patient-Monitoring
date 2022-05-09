@@ -3,5 +3,5 @@
     "port": 1883,
     "baseTopic": "Patient_Monitor_2022",
     "catalog_address": "http://127.0.0.1:9090",
-    "telegramToken": "5396367162:AAFu2Tc7J6iqhhxHuAzDdVB3xQCG6OsNXvo"
+    "telegramToken": "5354444090:AAGcdO3eaNI5I2pYCVx86zFDmuxQb8__Kus"
 }
