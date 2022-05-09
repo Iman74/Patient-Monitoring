@@ -620,7 +620,7 @@ def main(addressCatalog):
 						\n cm:\t command line\n j:\t json\n q:\t quit\n")
 					if command == 'j':
 						filename_new=input("Insert name of the json: ")
-						new_user=json.load(open(fielename_new, encoding="utf-8"))
+						new_user=json.load(open(filename_new, encoding="utf-8"))
 						payload= addDoc(new_user)
 						r = requests.post(addressCatalog+"/doctor", json=payload)
 						# print the response of the request 
@@ -640,7 +640,7 @@ def main(addressCatalog):
 						\n cm:\t command line\n j:\t json\n q:\t quit\n")
 					if command == 'j':
 						filename_new=input("Insert name of the json: ")
-						new_user=json.load(open(fielename_new, encoding="utf-8"))
+						new_user=json.load(open(filename_new, encoding="utf-8"))
 						payload = addPatient(new_user)
 						r = requests.post(addressCatalog+"/patient/"+userID, json=payload)
 						print(r.text)
@@ -665,7 +665,7 @@ def main(addressCatalog):
 					\n cm:\t command line\n j:\t json\n q:\t quit\n")
 				if command == 'j':
 					filename_new=input("Insert name of the json: ")
-					new_dev=json.load(open(fielename_new, encoding="utf-8"))
+					new_dev=json.load(open(filename_new, encoding="utf-8"))
 					payload = addDev(new_dev)
 					r = requests.post(addressCatalog+"/device/"+userID,json=payload)
 					print(r.text)
@@ -684,7 +684,7 @@ def main(addressCatalog):
 					\n cm:\t command line\n j:\t json\n q:\t quit")
 				if command == 'j':
 					filename_new=input("Insert name of the json: ")
-					new_Serv=json.load(open(fielename_new, encoding="utf-8"))
+					new_Serv=json.load(open(filename_new, encoding="utf-8"))
 					payload = addServ(new_serv)
 					r = requests.post(addressCatalog+"/microservice", json=payload)
 					print(r.text)
@@ -710,7 +710,7 @@ def main(addressCatalog):
 					\n cm:\t command line\n j:\t json\n q:\t quit\n")
 				if command == 'j':
 					filename_new=input("Insert name of the json: ")
-					new_user=json.load(open(fielename_new, encoding="utf-8"))
+					new_user=json.load(open(filename_new, encoding="utf-8"))
 					payload = upUser(addressCatalog,new_user)
 					r = requests.put(addressCatalog+"/user", json=payload)
 					print(r.text)
@@ -729,7 +729,7 @@ def main(addressCatalog):
 					\n cm:\t command line\n j:\t json\n q:\t quit\n")
 				if command == 'j':
 					filename_new=input("Insert name of the json: ")
-					new_dev=json.load(open(fielename_new, encoding="utf-8"))
+					new_dev=json.load(open(filename_new, encoding="utf-8"))
 					payload = upDev(addressCatalog,new_dev)
 					r = requests.put(addressCatalog+"/device", json=payload)
 					print(r.text)
@@ -747,7 +747,7 @@ def main(addressCatalog):
 					\n cm:\t command line\n j:\t json\n q:\t quit\n")
 				if command == 'j':
 					filename_new=input("Insert name of the json: ")
-					new_Serv=json.load(open(fielename_new, encoding="utf-8"))
+					new_Serv=json.load(open(filename_new, encoding="utf-8"))
 					payload = upServ(addressCatalog,new_serv)
 					r = requests.put(addressCatalog+"/microservice", json=payload)
 					print(r.text)
