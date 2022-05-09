@@ -1,11 +1,11 @@
 {
-    "lastUpdate": "05-05-2022 19:48:29",
+    "lastUpdate": "09-05-2022 11:01:27",
     "doctorsList": [
         {
             "name": "Sheldon Cooper",
             "userID": 456789,
-            "password": 333,
-            "telegramID": 123,
+            "password": "doctor1",
+            "telegramID": 816607305,
             "patientsList": [
                 {
                     "name": "Tony Stark",
@@ -15,79 +15,24 @@
                     "thingspeak_chID": 123456,
                     "thingspeak_rkey": "",
                     "thingspeak_wkey": "",
-                    "devicesList": [
-                        {
-                            "deviceID": "s_0x01",
-                            "deviceName": "SensorHR",
-                            "measureType": "heartrate",
-                            "availableServices": "MQTT",
-                            "servicesDetails": [
-                                {
-                                    "serviceType": "MQTT",
-                                    "serviceIP": "test.mosquitto.org",
-                                    "topic": [
-                                        "/saturation"
-                                    ]
-                                }
-                            ],
-                            "lastUpdate": "05-05-2022 19:48:29"
-                        },
-                        {
-                            "deviceID": "s_0x02",
-                            "deviceName": "SensorRT",
-                            "measureType": "temperature",
-                            "availableServices": "MQTT",
-                            "servicesDetails": [
-                                {
-                                    "serviceType": "MQTT",
-                                    "serviceIP": "test.mosquitto.org",
-                                    "topic": [
-                                        "/roomTemperature"
-                                    ]
-                                }
-                            ],
-                            "lastUpdate": "05-05-2022 19:48:29"
-                        },
-                        {
-                            "deviceID": "s_0x03",
-                            "deviceName": "SensorHR",
-                            "measureType": "heartrate",
-                            "availableServices": "MQTT",
-                            "servicesDetails": [
-                                {
-                                    "serviceType": "MQTT",
-                                    "serviceIP": "test.mosquitto.org",
-                                    "topic": [
-                                        "/heartRate"
-                                    ]
-                                }
-                            ],
-                            "lastUpdate": "05-05-2022 19:48:29"
-                        },
-                        {
-                            "deviceID": "s_0x04",
-                            "deviceName": "SensorBT",
-                            "measureType": "temperature",
-                            "availableServices": "MQTT",
-                            "servicesDetails": [
-                                {
-                                    "serviceType": "MQTT",
-                                    "serviceIP": "test.mosquitto.org",
-                                    "topic": [
-                                        "/bodyTemperature"
-                                    ]
-                                }
-                            ],
-                            "lastUpdate": "05-05-2022 19:48:29"
-                        }
-                    ]
+                    "devicesList": []
                 },
                 {
                     "name": "Steve Rogers",
                     "userID": 2,
-                    "password": 321654,
-                    "telegramID": 456,
+                    "password": "ironman",
+                    "telegramID": 816607305,
                     "thingspeak_chID": 245,
+                    "thingspeak_rkey": "",
+                    "thingspeak_wkey": "",
+                    "devicesList": []
+                },
+                {
+                    "name": "Homer Simpson",
+                    "userID": "742",
+                    "password": "donut",
+                    "telegramID": 816607305,
+                    "thingspeak_chID": "",
                     "thingspeak_rkey": "",
                     "thingspeak_wkey": "",
                     "devicesList": []
@@ -97,8 +42,8 @@
         {
             "name": "Mario Rossi",
             "userID": 3,
-            "password": "oky",
-            "telegramID": 123,
+            "password": "/start",
+            "telegramID": 816607305,
             "patientsList": []
         },
         {
@@ -116,7 +61,7 @@
             "protocol": "MQTT"
         }
     ],
-    "telegramToken": "5396367162:AAFu2Tc7J6iqhhxHuAzDdVB3xQCG6OsNXvo",
+    "telegramToken": "5354444090:AAGcdO3eaNI5I2pYCVx86zFDmuxQb8__Kus",
     "broker": "test.mosquitto.org",
     "port": 1883,
     "baseTopic": "Patient_Monitor_2022"
