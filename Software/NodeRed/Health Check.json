@@ -1,0 +1,226 @@
+[
+    {
+        "id": "4af76810b44ec470",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "2c6873d2.992abc",
+        "type": "mqtt out",
+        "z": "4af76810b44ec470",
+        "name": "",
+        "topic": "Patient_Monitor_2022/NodeRedtest/",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "8317dfc5b8f4bd6d",
+        "x": 674,
+        "y": 121,
+        "wires": []
+    },
+    {
+        "id": "8640b8ff.f82ff8",
+        "type": "debug",
+        "z": "4af76810b44ec470",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "be80048.8f232f8",
+        "type": "mqtt in",
+        "z": "4af76810b44ec470",
+        "name": "",
+        "topic": "Patient_Monitor_2022/#",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "8317dfc5b8f4bd6d",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 140,
+        "y": 300,
+        "wires": [
+            [
+                "f6f91db3d3960dd6"
+            ]
+        ]
+    },
+    {
+        "id": "eb42141e286017e9",
+        "type": "inject",
+        "z": "4af76810b44ec470",
+        "name": "TS- ms",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "HelloWorld",
+        "payload": "{\"bn\":\"p_dummy/s_dummy\",\"e\":{\"n\":\"NodeRed\",\"value\":0,\"timestamp\":0,\"unit\":\"%\"}}",
+        "payloadType": "json",
+        "x": 194,
+        "y": 121,
+        "wires": [
+            [
+                "2c6873d2.992abc"
+            ]
+        ]
+    },
+    {
+        "id": "f6f91db3d3960dd6",
+        "type": "function",
+        "z": "4af76810b44ec470",
+        "name": "Health Check",
+        "func": "// Default answer\n// massage_to_send = \n// {\n//   bn: \"\",\n//   e: {\n//     n: \"Warning\",\n//     value: \"\",\n//     timestamp: 0,\n//     unit: \"\"\n//   }\n// }\n\n// Create a Date object from the payload\nvar topic = msg.topic.split('/');\n// topic.splice(-1);//remove last topic item\ntopic.push(\"Warning\");\nmsg.topic = topic.join('/');\n\n// JSON.stringify(topic)\n\nvar Massage = JSON.parse(msg.payload);\n// node.warn(\"Massage: \" + Massage.e.n +\" \"+ Massage.e.value)\nif (Massage.e.n == \"oxygen\")\n{\n    if (Massage.e.value > 95 &&  Massage.e.value <= 100)\n    {\n     //do nothing all right    \n    } else if (Massage.e.value > 85 &&  Massage.e.value <= 94)\n    {\n        //hypoxia\n        // node.warn(\"hypoxia: \" +Massage.e.n +\" \"+ Massage.e.value);\n        // bn = Massage.bn.split('/');\n        // bn.splice(-1);//remove last sensor item\n        // massage_to_send.bn = bn.join('/');\n        // massage_to_send.e= Massage.e\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Hypoxia)\"\n        msg.payload = massage_to_send\n        return msg;\n        \n        \n    }else if (Massage.e.value >= 0 &&  Massage.e.value <= 84)\n    {\n        //sensor problem\n        // node.warn(\"sensor problem : \" +Massage.e.n );\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Sensor Error)\"\n        msg.payload = massage_to_send\n        return msg;\n    }else\n    {\n        //sensor problem\n        // node.warn(\"sensor problem : \" +Massage.e.n );\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Value Error)\"\n        msg.payload = massage_to_send\n        return msg;\n    }\n}\nelse if (Massage.e.n == \"room temperature\")\n{\n    if (Massage.e.value >= 20.0 &&  Massage.e.value <= 22.0)\n    {\n     //do nothing all right    Normal Room\n    } else if (Massage.e.value > 22.1)\n    {\n        //Hot Room\n        // node.warn(\"hypoxia: \" +Massage.e.n +\" \"+ Massage.e.value);\n        // bn = Massage.bn.split('/');\n        // bn.splice(-1);//remove last sensor item\n        // massage_to_send.bn = bn.join('/');\n        // massage_to_send.e= Massage.e\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Hot Room)\"\n        msg.payload = massage_to_send\n        return msg;\n        \n        \n    }else if (Massage.e.value < 19.9)\n    {\n        //cold Room\n        // node.warn(\"sensor problem : \" +Massage.e.n );\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Cold Room)\"\n        msg.payload = massage_to_send\n        return msg;\n    }else\n    {\n        //sensor problem\n        // node.warn(\"sensor problem : \" +Massage.e.n );\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Value Error)\"\n        msg.payload = massage_to_send\n        return msg;\n    }\n}\n\nelse if (Massage.e.n == \"heartrate\")\n{\n    if (Massage.e.value >= 60 &&  Massage.e.value <= 100)\n    {\n     //do nothing all right    Normal heart rate\n    } else if (Massage.e.value > 100)\n    {\n        //Hot Room\n        // node.warn(\"hypoxia: \" +Massage.e.n +\" \"+ Massage.e.value);\n        // bn = Massage.bn.split('/');\n        // bn.splice(-1);//remove last sensor item\n        // massage_to_send.bn = bn.join('/');\n        // massage_to_send.e= Massage.e\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Tachycardia)\"\n        msg.payload = massage_to_send\n        return msg;\n        \n        \n    }else if (Massage.e.value < 60)\n    {\n        //cold Room\n        // node.warn(\"sensor problem : \" +Massage.e.n );\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Bradycardia)\"\n        msg.payload = massage_to_send\n        return msg;\n    }else\n    {\n        //sensor problem\n        // node.warn(\"sensor problem : \" +Massage.e.n );\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Value Error)\"\n        msg.payload = massage_to_send\n        return msg;\n    }\n}\n\nelse if (Massage.e.n == \"body temperature\")\n{\n    if (Massage.e.value >= 35.6 &&  Massage.e.value <= 37.4)\n    {\n     //do nothing all right    Normal Room\n    } else if (Massage.e.value >= 37.5 &&  Massage.e.value <= 39.4)\n    {\n        //Hot Room\n        // node.warn(\"hypoxia: \" +Massage.e.n +\" \"+ Massage.e.value);\n        // bn = Massage.bn.split('/');\n        // bn.splice(-1);//remove last sensor item\n        // massage_to_send.bn = bn.join('/');\n        // massage_to_send.e= Massage.e\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Fever)\"\n        msg.payload = massage_to_send\n        return msg;\n        \n    } else if (Massage.e.value >= 39.5 &&  Massage.e.value <= 42)\n    {\n        //cold Room\n        // node.warn(\"sensor problem : \" +Massage.e.n );\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (High Fever)\"\n        msg.payload = massage_to_send\n        return msg;\n        \n    } else if (Massage.e.value >= 33.0 &&  Massage.e.value <= 35.5)\n    {\n        //cold Room\n        // node.warn(\"sensor problem : \" +Massage.e.n );\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Hypothermia)\"\n        msg.payload = massage_to_send\n        return msg;\n    }else\n    {\n        //sensor problem\n        // node.warn(\"sensor problem : \" +Massage.e.n );\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Value Error)\"\n        msg.payload = massage_to_send\n        return msg;\n    }\n}\n \n    \n// return node.warn(Massage.bn);\n// node.warn(massage_to_send)\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 300,
+        "wires": [
+            [
+                "700928674bbdd276",
+                "8640b8ff.f82ff8"
+            ]
+        ]
+    },
+    {
+        "id": "85fc882e09dbc2cf",
+        "type": "debug",
+        "z": "4af76810b44ec470",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1150,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "700928674bbdd276",
+        "type": "mqtt out",
+        "z": "4af76810b44ec470",
+        "name": "",
+        "topic": "",
+        "qos": "2",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "8317dfc5b8f4bd6d",
+        "x": 890,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "fc875e231de71d4d",
+        "type": "function",
+        "z": "4af76810b44ec470",
+        "name": "Body Temperature Check",
+        "func": "// Default answer\n// massage_to_send = \n// {\n//   bn: \"\",\n//   e: {\n//     n: \"Warning\",\n//     value: \"\",\n//     timestamp: 0,\n//     unit: \"\"\n//   }\n// }\n\n// Create a Date object from the payload\nvar topic = msg.topic.split('/');\ntopic.splice(-1);//remove last topic item\nmsg.topic = topic.join('/');;\n// JSON.stringify(topic)\n\nvar Massage = JSON.parse(msg.payload);\n// node.warn(\"Massage: \" + Massage.e.n +\" \"+ Massage.e.value)\nif (Massage.e.n == \"oxygen\")\n{\n    if (Massage.e.value > 95 &&  Massage.e.value <= 100)\n    {\n     //do nothing all right    \n    } else if (Massage.e.value > 85 &&  Massage.e.value <= 94)\n    {\n        //hypoxia\n        // node.warn(\"hypoxia: \" +Massage.e.n +\" \"+ Massage.e.value);\n        // bn = Massage.bn.split('/');\n        // bn.splice(-1);//remove last sensor item\n        // massage_to_send.bn = bn.join('/');\n        // massage_to_send.e= Massage.e\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Hypoxia)\"\n        msg.payload = massage_to_send\n        return msg;\n        \n        \n    }else if (Massage.e.value >= 0 &&  Massage.e.value <= 84)\n    {\n        //sensor problem\n        // node.warn(\"sensor problem : \" +Massage.e.n );\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" Sensor Error\"\n        msg.payload = massage_to_send\n        return msg;\n    }\n}\n    \n// return node.warn(Massage.bn);\n// node.warn(massage_to_send)\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2edef282793349bc",
+        "type": "function",
+        "z": "4af76810b44ec470",
+        "name": "Heart Rate Check",
+        "func": "// Default answer\n// massage_to_send = \n// {\n//   bn: \"\",\n//   e: {\n//     n: \"Warning\",\n//     value: \"\",\n//     timestamp: 0,\n//     unit: \"\"\n//   }\n// }\n\n// Create a Date object from the payload\nvar topic = msg.topic.split('/');\ntopic.splice(-1);//remove last topic item\nmsg.topic = topic.join('/');;\n// JSON.stringify(topic)\n\nvar Massage = JSON.parse(msg.payload);\n// node.warn(\"Massage: \" + Massage.e.n +\" \"+ Massage.e.value)\nif (Massage.e.n == \"oxygen\")\n{\n    if (Massage.e.value > 95 &&  Massage.e.value <= 100)\n    {\n     //do nothing all right    \n    } else if (Massage.e.value > 85 &&  Massage.e.value <= 94)\n    {\n        //hypoxia\n        // node.warn(\"hypoxia: \" +Massage.e.n +\" \"+ Massage.e.value);\n        // bn = Massage.bn.split('/');\n        // bn.splice(-1);//remove last sensor item\n        // massage_to_send.bn = bn.join('/');\n        // massage_to_send.e= Massage.e\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Hypoxia)\"\n        msg.payload = massage_to_send\n        return msg;\n        \n        \n    }else if (Massage.e.value >= 0 &&  Massage.e.value <= 84)\n    {\n        //sensor problem\n        // node.warn(\"sensor problem : \" +Massage.e.n );\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" Sensor Error\"\n        msg.payload = massage_to_send\n        return msg;\n    }\n}\n    \n// return node.warn(Massage.bn);\n// node.warn(massage_to_send)\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5b25c2fe1c8b5526",
+        "type": "function",
+        "z": "4af76810b44ec470",
+        "name": "Room Temperature Check",
+        "func": "// Default answer\n// massage_to_send = \n// {\n//   bn: \"\",\n//   e: {\n//     n: \"Warning\",\n//     value: \"\",\n//     timestamp: 0,\n//     unit: \"\"\n//   }\n// }\n\n// Create a Date object from the payload\nvar topic = msg.topic.split('/');\ntopic.splice(-1);//remove last topic item\ntopic.push(\"Warning\");\nmsg.topic = topic.join('/');\n// JSON.stringify(topic)\n\nvar Massage = JSON.parse(msg.payload);\n// node.warn(\"Massage: \" + Massage.e.n +\" \"+ Massage.e.value)\nif (Massage.e.n == \"room temperature\")\n{\n    if (Massage.e.value >= 20.0 &&  Massage.e.value <= 22.0)\n    {\n     //do nothing all right    Normal Room\n    } else if (Massage.e.value > 22.1)\n    {\n        //Hot Room\n        // node.warn(\"hypoxia: \" +Massage.e.n +\" \"+ Massage.e.value);\n        // bn = Massage.bn.split('/');\n        // bn.splice(-1);//remove last sensor item\n        // massage_to_send.bn = bn.join('/');\n        // massage_to_send.e= Massage.e\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Hot Room)\"\n        msg.payload = massage_to_send\n        return msg;\n        \n        \n    }else if (Massage.e.value < 19.9)\n    {\n        //cold Room\n        // node.warn(\"sensor problem : \" +Massage.e.n );\n        massage_to_send = Massage;\n        massage_to_send.e.n += \" (Cold Room)\"\n        msg.payload = massage_to_send\n        return msg;\n    }\n}\n    \n// return node.warn(Massage.bn);\n// node.warn(massage_to_send)\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8317dfc5b8f4bd6d",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "test.mosquitto.org",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    }
+]
