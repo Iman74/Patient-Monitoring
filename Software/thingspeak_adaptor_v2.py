@@ -100,6 +100,9 @@ class ThingSpeak_subscriber:
 
 	def notify(self,topic,msg):
 		message=json.loads(msg)
+		current_time = datetime.now()
+		timestamp=int(current_time.timestamp())
+		#now=datetime.now()
 		if message['e']['n']=='heart rate':
 			self.fieldname='field1'
 			self.value=float(message['e']['v'])
@@ -119,10 +122,21 @@ class ThingSpeak_subscriber:
 		# ThingSpeak requires ISO 8601 timestamp
 		msg = {"created_at": datetime.fromtimestamp(self.time).isoformat(), 
 		self.fieldname: self.value}
-		self.payload['updates'].append(msg)
+		if self.time<(timestamp+15):
+			msg.update({self.fieldname : self.value})
+			#if self.payload['updates'][0]['created_at']!=msg:
+				#self.payload['updates'].append(msg)
+			#else:
+				#self.payload['updates'].update({self.fieldname : self.value})
+			self.payload['updates'].append(msg)
 
 	def save_data(self):
-		return(self.payload)
+		database=self.payload
+		self.payload={
+		"write_api_key": "N14TC42Q5HCUTOMH",
+			"updates": []
+			}
+		return(database)
 
 
 if __name__ == "__main__":
