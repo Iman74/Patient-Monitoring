@@ -1,0 +1,7 @@
+{
+	"name": "ThingSpeakAdaptor",
+	"QoS": 2,
+	"topics_update_interval": 15,
+	"thingspeak_url": "https://api.thingspeak.com/channels.json",
+	"catalog_address": "http://127.0.0.1:9090"
+}
