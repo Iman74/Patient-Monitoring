@@ -35,6 +35,14 @@ def update_me(deviceID,info_sensor):
     r = requests.put(addressCatalog+"/device", json=payload)
     # update to stay "alive" in the catalog and update the timestamp
 
+def register_me(patinetID,info_sensor):
+    settings = json.load(open("settings.json", encoding="utf-8"))
+    addressCatalog = settings["catalog_address"]
+    #payload = json.dumps(info_sensor)
+    payload = info_sensor
+    r = requests.post(addressCatalog+"/device/"+patinetID, json=payload)
+    # update to stay "alive" in the catalog and update the timestamp
+
 def HeartRateSensor(range_,sensorID,broker):
     info_sensor = {
                 "deviceID": sensorID,
@@ -51,6 +59,8 @@ def HeartRateSensor(range_,sensorID,broker):
                             "lastUpdate": ""
                 }
     patientID = find_me(sensorID)
+    if  patientID is None:
+        register_me("1",info_sensor) #Registre temp for first time
     update_me(sensorID,info_sensor)
     # check if patientID has been acquired correctly
     if patientID:
@@ -96,6 +106,8 @@ def RoomTempratureSensor(range_,sensorID,broker):
                             "lastUpdate": ""
                 }
     patientID = find_me(sensorID)
+    if  patientID is None:
+        register_me("1",info_sensor) #Registre temp for first time
     update_me(sensorID,info_sensor)
     # check if patientID has been acquired correctly
     if patientID:
@@ -142,6 +154,8 @@ def OxygenSensor(range_,sensorID,broker):
                             "lastUpdate": ""
                 }
     patientID = find_me(sensorID)
+    if  patientID is None:
+        register_me("1",info_sensor) #Registre temp for first time
     update_me(sensorID,info_sensor)
     # check if patientID has been acquired correctly
     if patientID:
@@ -185,6 +199,8 @@ def BodyTempratureSensor(range_,sensorID,broker):
                             "lastUpdate": ""
                 }
     patientID = find_me(sensorID)
+    if  patientID is None:
+        register_me("1",info_sensor) #Registre temp for first time
     update_me(sensorID,info_sensor)
     # check if patientID has been acquired correctly
     if patientID:
@@ -295,10 +311,14 @@ if __name__ == "__main__":
     sensor = Publisher(baseTopic,["/roomTemperature","/bodyTemperature",
                           "/heartRate","/saturation"], broker, port)
     sensor.start()
-    range_h=input('\nAvailable range:\nbradycardia\nnormal\ntachycardia\nquit\n') 
-    range_rT = input('\nAvailable range:\ncold room\nnormal room\nhot room\nquit\n')
-    range_bT = input('\nAvailable range:\nhypothermia\nnormal\nfever\nhighfever\nquit\n')
-    range_o = input('\nAvailable range:\nnormal\nhypoxia\nacute_respiratory_failure\nquit\n') 
+    range_h="normal"
+    range_rT="normal room"
+    range_bT="normal"
+    range_o="normal"
+    # range_h=input('\nAvailable range:\nbradycardia\nnormal\ntachycardia\nquit\n') 
+    # range_rT = input('\nAvailable range:\ncold room\nnormal room\nhot room\nquit\n')
+    # range_bT = input('\nAvailable range:\nhypothermia\nnormal\nfever\nhighfever\nquit\n')
+    # range_o = input('\nAvailable range:\nnormal\nhypoxia\nacute_respiratory_failure\nquit\n') 
     while True:
         message_h = HeartRateSensor(range_h,sensorID_h,broker)
         message_rT = RoomTempratureSensor(range_rT,sensorID_rT,broker)
@@ -308,7 +328,7 @@ if __name__ == "__main__":
             print('A sensor is not registered in the catalog.')
             break  
         sensor.publish(message_h,message_o,message_bT,message_rT)
-        time.sleep(15) #ThingSpeak can load data max every 15 seconds
+        time.sleep(5) #ThingSpeak can load data max every 15 seconds
     sensor.stop()
 
 
