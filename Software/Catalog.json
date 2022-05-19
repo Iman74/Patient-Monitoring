@@ -1,5 +1,5 @@
 {
-    "lastUpdate": "09-05-2022 11:01:27",
+    "lastUpdate": "19-05-2022 15:54:30",
     "doctorsList": [
         {
             "name": "Sheldon Cooper",
@@ -15,7 +15,72 @@
                     "thingspeak_chID": 123456,
                     "thingspeak_rkey": "",
                     "thingspeak_wkey": "",
-                    "devicesList": []
+                    "devicesList": [
+                        {
+                            "deviceID": "s_0x03",
+                            "deviceName": "SensorHR",
+                            "measureType": "heartrate",
+                            "availableServices": "MQTT",
+                            "servicesDetails": [
+                                {
+                                    "serviceType": "MQTT",
+                                    "serviceIP": "test.mosquitto.org",
+                                    "topic": [
+                                        "/heartRate"
+                                    ]
+                                }
+                            ],
+                            "lastUpdate": "19-05-2022 15:54:30"
+                        },
+                        {
+                            "deviceID": "s_0x02",
+                            "deviceName": "SensorRT",
+                            "measureType": "temperature",
+                            "availableServices": "MQTT",
+                            "servicesDetails": [
+                                {
+                                    "serviceType": "MQTT",
+                                    "serviceIP": "test.mosquitto.org",
+                                    "topic": [
+                                        "/roomTemperature"
+                                    ]
+                                }
+                            ],
+                            "lastUpdate": "19-05-2022 15:54:30"
+                        },
+                        {
+                            "deviceID": "s_0x04",
+                            "deviceName": "SensorBT",
+                            "measureType": "temperature",
+                            "availableServices": "MQTT",
+                            "servicesDetails": [
+                                {
+                                    "serviceType": "MQTT",
+                                    "serviceIP": "test.mosquitto.org",
+                                    "topic": [
+                                        "/bodyTemperature"
+                                    ]
+                                }
+                            ],
+                            "lastUpdate": "19-05-2022 15:54:30"
+                        },
+                        {
+                            "deviceID": "s_0x01",
+                            "deviceName": "SensorHR",
+                            "measureType": "heartrate",
+                            "availableServices": "MQTT",
+                            "servicesDetails": [
+                                {
+                                    "serviceType": "MQTT",
+                                    "serviceIP": "test.mosquitto.org",
+                                    "topic": [
+                                        "/saturation"
+                                    ]
+                                }
+                            ],
+                            "lastUpdate": "19-05-2022 15:54:30"
+                        }
+                    ]
                 },
                 {
                     "name": "Steve Rogers",
