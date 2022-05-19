@@ -31,21 +31,24 @@ class GetData_From_Catalog:
 	def get_patients(self):
 		#get active patients from Catalog
 		r=self.s.get(self.Catalog+'/patients')
-		self.patients=json.loads(r.text)['patients']
-		for i in range (len(self.patients)):
-			if bool(self.patients[i]["devicesList"])==False:
+		patients_=json.loads(r.text)['patients']
+		self.patients=patients_.copy()
+		for patient in patients_:
+			if bool(patient["devicesList"])==False:
 			#check if the devices list of each patient is empty
-				self.patients.remove(self.patients[i])
+				self.patients.remove(patient)
 		return self.patients
 
 	def get_devices(self):
+		patients_ = self.patients.copy()
 		#get mqtt devices from active patients
 		for i in range (len(self.patients)):
 			for j in range (len(self.patients[i-1]["devicesList"])):
 				for k in range(len(self.patients[i-1]["devicesList"][j-1]["servicesDetails"])):
 					if (self.patients[i-1]["devicesList"][j-1]["servicesDetails"][k-1]["serviceType"]!="MQTT")==True:
 						#check if the devices support mqtt connection
-						self.patients.remove(self.patients[i-1]["devicesList"][j-1])
+						patients_.remove(self.patients[i-1]["devicesList"][j-1])
+		self.patients = patients_
 		return self.patients
 
 	def get_topics_ID(self):
@@ -132,11 +135,48 @@ class ThingSpeak_subscriber:
 
 	def save_data(self):
 		database=self.payload
+		# check for the same timestamp  and put values with the same timestamp together:
+		database['updates'] = self.refine_payload(database['updates'])
 		self.payload={
 		"write_api_key": "N14TC42Q5HCUTOMH",
 			"updates": []
 			}
 		return(database)
+	
+	def refine_payload(self, payload):
+		if payload:
+			refined_payload =[]
+			refined_payload.append(payload.pop(0))
+			for item in payload:
+				repeat =False
+				for r_item in refined_payload:
+					if (item['created_at'] == r_item['created_at'] ):
+						repeat = True
+						if ('field1' in item):
+							if ('field1' in r_item):
+								print("Same Value Same Time Same Sensor !")
+							r_item ['field1'] = item['field1']
+						elif ('field2' in item):
+							if ('field2' in r_item):
+								print("Same Value Same Time Same Sensor !")
+							r_item ['field2'] = item['field2']
+						elif ('field3' in item):
+							if ('field3' in r_item):
+								print("Same Value Same Time Same Sensor !")
+							r_item ['field3'] = item['field3']
+						elif ('field4' in item):
+							if ('field4' in r_item):
+								print("Same Value Same Time Same Sensor !")
+							r_item ['field4'] = item['field4']
+					
+				if repeat == False:			
+					refined_payload.append(item)
+			return refined_payload
+		else:
+			return payload
+			
+
+
 
 
 if __name__ == "__main__":
