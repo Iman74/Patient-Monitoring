@@ -13,6 +13,7 @@ def get_broker(catalog_url):
 	port = int(requests.get(catalog_url+'/port').text)
 	baseTopic = requests.get(catalog_url+'/base_topic').text
 	return (broker, port, baseTopic)
+	
 
 #REST client to obtain data from the Catalog
 class GetData_From_Catalog:
@@ -86,7 +87,7 @@ class ThingSpeak_subscriber:
 		self.fieldname=""
 		self.value=""
 		self.payload = {
-		"write_api_key": "N14TC42Q5HCUTOMH",
+		"write_api_key": "434C95BEI6UMSS6D",
 			"updates": []
 			}
 
@@ -138,9 +139,15 @@ class ThingSpeak_subscriber:
 		# check for the same timestamp  and put values with the same timestamp together:
 		database['updates'] = self.refine_payload(database['updates'])
 		self.payload={
-		"write_api_key": "N14TC42Q5HCUTOMH",
+		"write_api_key": "434C95BEI6UMSS6D",
 			"updates": []
 			}
+		ch_id = "1718792"
+		url = "https://api.thingspeak.com/channels/"+str(ch_id)+"/bulk_update.json"
+		headers = {
+	  			'Content-Type': 'application/json'
+			}	
+		r = requests.post(url,headers = headers, data = json.dumps(database))
 		return(database)
 	
 	def refine_payload(self, payload):
@@ -174,9 +181,6 @@ class ThingSpeak_subscriber:
 			return refined_payload
 		else:
 			return payload
-			
-
-
 
 
 if __name__ == "__main__":
