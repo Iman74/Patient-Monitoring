@@ -1,5 +1,5 @@
 {
-    "lastUpdate": "19-05-2022 15:58:03",
+    "lastUpdate": "31-05-2022 17:34:28",
     "doctorsList": [
         {
             "name": "Sheldon Cooper",
@@ -30,7 +30,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "19-05-2022 15:58:03"
+                            "lastUpdate": "31-05-2022 17:34:28"
                         },
                         {
                             "deviceID": "s_0x02",
@@ -46,7 +46,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "19-05-2022 15:58:03"
+                            "lastUpdate": "31-05-2022 17:34:28"
                         },
                         {
                             "deviceID": "s_0x04",
@@ -62,11 +62,11 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "19-05-2022 15:58:03"
+                            "lastUpdate": "31-05-2022 17:34:28"
                         },
                         {
                             "deviceID": "s_0x01",
-                            "deviceName": "SensorHR",
+                            "deviceName": "SensorO",
                             "measureType": "heartrate",
                             "availableServices": "MQTT",
                             "servicesDetails": [
@@ -74,11 +74,11 @@
                                     "serviceType": "MQTT",
                                     "serviceIP": "test.mosquitto.org",
                                     "topic": [
-                                        "/saturation"
+                                        "/oxygen"
                                     ]
                                 }
                             ],
-                            "lastUpdate": "19-05-2022 15:58:03"
+                            "lastUpdate": "31-05-2022 17:34:28"
                         }
                     ]
                 },

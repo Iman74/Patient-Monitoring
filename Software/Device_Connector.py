@@ -141,14 +141,14 @@ def RoomTempratureSensor(range_,sensorID,broker):
 def OxygenSensor(range_,sensorID,broker):
     info_sensor = {
                 "deviceID": sensorID,
-                "deviceName": "SensorHR",
+                "deviceName": "SensorO",
                 "measureType": "heartrate",
                 "availableServices": "MQTT",
                 "servicesDetails": [{
                                     "serviceType": "MQTT",
                                     "serviceIP": broker,
                                     "topic": [
-                                        "/saturation"
+                                        "/oxygen"
                                     ]}
                                 ],
                             "lastUpdate": ""
@@ -275,11 +275,11 @@ class Publisher:
                 message['e']['t'] = message_h['e']['t']
                 message['e']['u'] = 'bpm'
 
-            elif t == "/saturation":
+            elif t == "/oxygen":
                 patientID, sensorID = message_o['bn'].split('/')
                 message = self.__message
                 message['bn'] = '/'.join((patientID,sensorID,t))
-                message['e']['n'] = 'saturation'
+                message['e']['n'] = 'oxygen'
                 message['e']['v'] = message_o['e']['v']
                 message['e']['t'] = message_o['e']['t']
                 message['e']['u'] = '%'
@@ -309,7 +309,7 @@ if __name__ == "__main__":
     sensorID_bT = "s_"+"0x04"
 
     sensor = Publisher(baseTopic,["/roomTemperature","/bodyTemperature",
-                          "/heartRate","/saturation"], broker, port)
+                          "/heartRate","/oxygen"], broker, port)
     sensor.start()
     range_h="normal"
     range_rT="normal room"

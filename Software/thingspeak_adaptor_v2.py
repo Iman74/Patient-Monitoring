@@ -119,10 +119,12 @@ class ThingSpeak_subscriber:
 			self.fieldname='field3'
 			self.value=float(message['e']['v'])
 			self.time=int(message['e']['t'])
-		else:
+		elif message['e']['n']=='room temperature':
 			self.fieldname='field4'
 			self.value=float(message['e']['v'])
 			self.time=int(message['e']['t'])
+		else:
+			print ("Unknown sensor: "+str(message['e']['n']))
 		# ThingSpeak requires ISO 8601 timestamp
 		msg = {"created_at": datetime.fromtimestamp(self.time).isoformat(), 
 		self.fieldname: self.value}
@@ -161,23 +163,23 @@ class ThingSpeak_subscriber:
 						repeat = True
 						if ('field1' in item):
 							if ('field1' in r_item):
-								print("Same Value Same Time Same Sensor !")
+								print("Same Value Same Time Same Sensor1 !")
 							r_item ['field1'] = item['field1']
 						elif ('field2' in item):
 							if ('field2' in r_item):
-								print("Same Value Same Time Same Sensor !")
+								print("Same Value Same Time Same Sensor2 !")
 							r_item ['field2'] = item['field2']
 						elif ('field3' in item):
 							if ('field3' in r_item):
-								print("Same Value Same Time Same Sensor !")
+								print("Same Value Same Time Same Sensor3 !")
 							r_item ['field3'] = item['field3']
 						elif ('field4' in item):
 							if ('field4' in r_item):
-								print("Same Value Same Time Same Sensor !")
+								print("Same Value Same Time Same Sensor4 !")
 							r_item ['field4'] = item['field4']
 					
 				if repeat == False:			
-					refined_payload.append(item)
+					refined_payload.append(item)					
 			return refined_payload
 		else:
 			return payload
