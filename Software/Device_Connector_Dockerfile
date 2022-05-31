@@ -1,0 +1,14 @@
+FROM python:3.8
+
+
+
+ADD Device_Connector.py /
+ADD settings.json /
+ADD Device_Connector_requirements.txt /
+
+
+RUN pip3 install -r Device_Connector_requirements.txt
+
+
+
+CMD ["python3","./Device_Connector.py"]
