@@ -60,7 +60,8 @@ def HeartRateSensor(range_,sensorID,broker):
                 }
     patientID = find_me(sensorID)
     if  patientID is None:
-        register_me("1",info_sensor) #Registre temp for first time
+        register_me("2",info_sensor) #Registre temp for first time
+        patientID = find_me(sensorID)
     update_me(sensorID,info_sensor)
     # check if patientID has been acquired correctly
     if patientID:
@@ -303,10 +304,10 @@ if __name__ == "__main__":
     port = int(requests.get(addressCatalog+'/port').text)
     baseTopic = requests.get(addressCatalog+'/base_topic').text
 
-    sensorID_o = "s_"+"0x01"
-    sensorID_rT = "s_"+"0x02"
-    sensorID_h = "s_"+"0x03"
-    sensorID_bT = "s_"+"0x04"
+    sensorID_o = "s_"+"0x05"
+    sensorID_rT = "s_"+"0x06"
+    sensorID_h = "s_"+"0x07"
+    sensorID_bT = "s_"+"0x08"
 
     sensor = Publisher(baseTopic,["/roomTemperature","/bodyTemperature",
                           "/heartRate","/oxygen"], broker, port)
@@ -314,7 +315,7 @@ if __name__ == "__main__":
     range_h="normal"
     range_rT="normal room"
     range_bT="normal"
-    range_o="normal"
+    range_o="hypoxia"
     # range_h=input('\nAvailable range:\nbradycardia\nnormal\ntachycardia\nquit\n') 
     # range_rT = input('\nAvailable range:\ncold room\nnormal room\nhot room\nquit\n')
     # range_bT = input('\nAvailable range:\nhypothermia\nnormal\nfever\nhighfever\nquit\n')
