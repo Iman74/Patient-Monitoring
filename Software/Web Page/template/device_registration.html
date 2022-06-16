@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>Patient Monitoring - Device Register</title>
+        <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
+        <link rel="stylesheet" href="css/style.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+
+    <body>
+
+        <h1 style="text-align: center;">Patient Monitoring - Device Registration</h1>
+        <div class="container">
+            <p style="text-align: center;">
+            <input type="button" onclick="document.location.href='/';" value="Homepage"><br></p>
+                <form onsubmit="sendPOSTrequest()">
+                    <div class="user_info">
+                        <span class="details">UserID of the patient to insert the new device:</span>
+                        <!--name will be the name of the variable given by input -->
+                        <input type="text" name="userID" required>
+                        <span class="details">Device ID:</span>
+                        <input type="text" name="deviceID" required>
+                        <span class="details">Name:</span>
+                        <input type="text" name="name" required>
+                        <span class="details">Measure Type:</span>
+                        <p style="font-size:14px">
+                            &#9432; Enter the list of available services. Your list must follow this format:
+                            [temperature,oxygen saturation,ecc], so you have to divide elements with a comma.
+                        </p>
+                        <input type="text" name="measureType" required>
+                        <span class="details">Available Services:</span>
+                        <p style="font-size:14px">
+                            &#9432; Enter the list of available services. Your list must follow this format:
+                            [MQTT,REST,ecc], so you have to divide elements with a comma.
+                        </p>
+                        <input type="text" name="services" required>
+                        <span class="details">Services details:</span>
+                        <p style="font-size:14px" class="box_details">
+                            &#9432; Enter the list of services details. Your list must follow this format:
+                            [{"serviceType": "MQTT",
+                                "serviceIP": "mqtt.mosquittos.org",
+                                "topic": ["/bodytemperature"]}]
+                        </p>
+                        <textarea class="text_area" id="serviceDetails" required>
+                        </textarea>
+                        <input type="submit">
+                    </div>
+                </form>
+        </div>
+        <script>
+            function sendPOSTrequest() {
+                userID = $("#userID").val();
+                deviceID = $("#deviceID").val();
+                deviceName = $("#name").val();
+                measureType = $("#measureType").val();
+                availableServices = $("#services").val();
+                serviceDetails = $("#serviceDetails").val();
+                var myurl = "/api/device/"+userID;  
+                $.ajax({
+                    method: "POST",
+                    url: myurl,
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        deviceID: deviceID,
+                        deviceName: deviceName,
+                        measureType: measureType.split(","),
+                        availableServices: availableServices.split(","),
+                        serviceDetails: serviceDetails.split(",")
+                    }),
+                    dataType: "json",
+                    complete: function (r) {
+                        alert(r.responseText)
+                    },
+                });
+            }
+
+    </script>
+    </body>
+</html>

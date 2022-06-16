@@ -1,0 +1,72 @@
+body {
+
+    background-image: url(../img/background.jpg);
+    background-size: cover;
+    text-align: center;
+}
+*{
+    font-family: Lato, Tahoma, Geneva, Verdana, sans-serif;
+}
+
+p{
+    font-size: 18px;
+}
+.container{
+    justify-content: center;
+    position: relative;
+    /*background-color: rgba(147, 213, 228, 0.49);*/
+    background-color: rgba(116, 212, 204,0.5);
+    box-shadow: 5px 5px #62778293;
+    /*Padding is used to create space around an element's content,
+     inside of any defined borders.*/
+    padding: 15px;
+    width: 400px;
+    left: 540px;
+    top: 30px;
+    border-radius: 10px;
+}
+input[type=text], input[type=password]{
+    display: block;
+    margin: 10px auto;
+    width: 60%;
+    height: 30px;
+    border-radius: 5px;
+    border: none;
+    border-bottom: 2px solid rgb(92, 241, 234);
+}
+input[type=button], input[type=submit]{
+    background-color: #04AA6D;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-decoration: none;
+    margin: 4px 2px;
+    transition-duration:.4s;
+     /*determine the speed of the  0"hover" effect*/
+  }
+  
+    /*Use the :hover selector to change the style 
+    of a button when you move the mouse over it.*/
+    input[type=button]:hover, input[type=submit]:hover{
+    box-shadow: 1px 1px 15px rgb(105, 137, 147);
+    /*Make the Cursor a Hand Pointer*/
+    cursor: pointer;
+}
+.details{
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bolder;
+}
+.text_area{
+    width: 80%;
+    height: 150px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 2px solid rgb(92, 241, 234);
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    font-size: 16px;
+    resize:both;
+}

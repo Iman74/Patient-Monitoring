@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>Patient Monitoring - Response</title>
+        <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+
+
+    <body>
+        <!--Text-processing software typically assumes that an automatic line break may be
+            inserted anywhere a space character occurs; a non-breaking space (&nbsp;) prevents this from happening-->
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <h1 style="text-align: center;">Patient Monitoring - Response</h1>
+        <div class="container">
+            <p>&nbsp;</p>
+            <!--The string specified in the WebPageManager after % will go instead of %s-->
+            <h3 style="text-align: center;" id="resp">__RESPONSE_VALUE__</h3>
+            <p>&nbsp;</p>
+            <!--This is the button to return to the Homepage.-->
+            <!--The location.href property sets or returns the entire URL of the current page.-->
+            <p style="text-align: center;">
+            <input type="button" class="button" onclick="document.location.href='/';" value="Homepage"><br></p>
+        </div>
+    </body>
+</html>
