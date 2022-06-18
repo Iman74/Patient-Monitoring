@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
-        <title>Patient Monitoring - Device Register</title>
+        <title>Patient Monitoring - Doctor Update</title>
         <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
         <link rel="stylesheet" href="css/style.css" />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -17,38 +17,55 @@
         <h1 style="text-align: center;">Patient Monitoring - Doctor Update</h1>
         <div class="container">
             <p style="text-align: center;">
-            <input type="button" onclick="document.location.href='/';" value="Homepage"><br></p>
-                <form onsubmit="sendPUTrequest()" >    
+            <input type="button" onclick="document.location.href='/doctor_index';" value="Index"><br></p>
+                <form onsubmit="sendGETrequest()" >    
                     <div class="user_info">
-                        <span class="details">UserID:</span>
-                        <input type="text" id="userID" required>
                         <span class="details">Name:</span>
                         <input type="text" id="name" required>
                         <span class="details">Password:</span>
-                        <input type="password" name="password" required>
-                        <input type="submit">
+                        <input type="password" id="password" required>
+                        <input type="submit" value="Submit">
                     </div>
                 </form>
         </div>
         <script>
-                function sendPUTrequest() {
+                function sendGETrequest() {
                     event.preventDefault();
-                    userID = $("#userID").val();
+                    userID = sessionStorage.getItem('userID');
+                    myurl = "/api/doctor/"+userID; 
+                    $.ajax({
+                        method: "GET",
+                        url: myurl,
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function (response) {
+                            sendPUTrequest(response);
+                        }
+                    });
+                }
+                function sendPUTrequest(old) {
+                    event.preventDefault();
+                    userID = sessionStorage.getItem('userID');
                     name = $("#name").val();
                     password = $("#password").val();
-                    var myurl = "/api/user";  
+                    telegramID = old.telegramID;
+                    patientsList = old.patientsList;
+                    myurl = "/api/user/"+userID;  
                     $.ajax({
                         method: "PUT",
                         url: myurl,
                         contentType: "application/json",
                         data: JSON.stringify({
-                            userID: userID,
                             name: name,
+                            userID: userID,
                             password: password,
+                            telegramID: telegramID,
+			                patientsList: patientsList
                         }),
                         dataType: "json",
                         complete: function (r) {
-                            alert(r.responseText)
+                            alert(r.responseText);
+                            location.reload(); 
                         },
                     });
                 }

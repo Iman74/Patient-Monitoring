@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>Patient Monitoring - Personal info</title>
+        <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
+        <link rel="stylesheet" href="css/style.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+
+    <body onLoad="sendGETrequest()">
+
+        <h1 style="text-align: center;">Patient Monitoring - Personal info</h1>
+        <div class="container_table">
+            <p style="text-align: center;">
+                <input type="button" onclick="document.location.href='/doctor_index';" value="Index"><br></p>
+                <table class="table">
+                    <thead>
+                       <tr>
+                          <th scope="col">Name</th>
+                          <th scope="col">UserID</th>
+                          <th scope="col">Password</th>
+                          <th scope="col">Telegram ID</th>
+                       </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+        </div>
+        <script>
+                function sendGETrequest() {
+                    event.preventDefault();
+                    userID = sessionStorage.getItem('userID');
+                    myurl = "/api/doctor/"+userID; 
+                    $.ajax({
+                        method: "GET",
+                        url: myurl,
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function (response) {
+                            updateTable(response);
+                        }
+                    });
+                }
+                function updateTable(data) {
+                    updatedTableBody = "";
+                    updatedTableBody += "<tr>";
+                    updatedTableBody +=
+                                    "<td>"+
+                                    data.name+
+                                    "</td>"+
+                                    "<td>"+
+                                    data.userID+
+                                    "</td>"+
+                                    "<td>"+
+                                    data.password+
+                                    "</td>"+
+                                    "<td>"+
+                                    data.telegramID+
+                                    "</td>";
+                    updatedTableBody += "</tr>";
+                    $("#tableBody").html(updatedTableBody);
+                }
+
+
+        </script>
+
+    </body>
+</html>

@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
-        <title>Patient Monitoring - Device Register</title>
+        <title>Patient Monitoring - Microservice Deletion</title>
         <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
         <link rel="stylesheet" href="css/style.css" />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -14,27 +14,31 @@
 
     <body>
 
-        <h1 style="text-align: center;">Patient Monitoring - User Deletion</h1>
+        <h1 style="text-align: center;">Patient Monitoring - Microservice Deletion</h1>
         <div class="container">
             <p style="text-align: center;">
-            <input type="button" onclick="document.location.href='/';" value="Homepage"><br></p>
+            <input type="button" onclick="document.location.href='/admin_index';" value="Index"><br></p>
                 <form onsubmit="sendDELrequest()" >    
                     <div class="user_info">
-                        <span class="details">Insert UserID of the user you want to delete:</span>
-                        <input type="text" id="userID" required>
-                        <input type="submit">
+                        <span class="details">Insert name of the microservice you want to delete:</span>
+                        <input type="text" id="serviceID" required>
+                        <!-- <input type="submit" name="Submit" value="submit"> -->
+                        <input type="submit" value="Submit">
+
                     </div>
                 </form>
         </div>
         <script>
                 function sendDELrequest() {
-                    userID = $("#userID").val();
-                    var myurl = "/api/user/"+userID; 
+                    /*event.preventDefault();*/
+                    serviceID = $("#serviceID").val();
+                    myurl = "/api/microservice/"+serviceID; 
                     $.ajax({
                         method: "DELETE",
                         url: myurl,
                         complete: function (r) {
                             alert(r.responseText)
+                            location.reload(); 
                         },
                     });
                 }
