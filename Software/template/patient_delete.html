@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
-        <title>Patient Monitoring - User Deletion</title>
+        <title>Patient Monitoring - Patient Deletion</title>
         <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
         <link rel="stylesheet" href="css/style.css" />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -14,13 +14,13 @@
 
     <body>
 
-        <h1 style="text-align: center;">Patient Monitoring - User Deletion</h1>
+        <h1 style="text-align: center;">Patient Monitoring - Patient Deletion</h1>
         <div class="container">
             <p style="text-align: center;">
             <input type="button" onclick="document.location.href='/admin_index';" value="Index"><br></p>
                 <form onsubmit="sendDELrequest()" >    
                     <div class="user_info">
-                        <span class="details">Insert UserID of the user you want to delete:</span>
+                        <span class="details">Insert UserID of the patient you want to delete:</span>
                         <input type="text" id="userID" required>
                         <input type="submit" value="Submit">
                     </div>
@@ -29,7 +29,7 @@
         <script>
                 function sendDELrequest() {
                     userID = $("#userID").val();
-                    myurl = "/api/user/"+userID; 
+                    myurl = "/api/patient/"+userID; 
                     $.ajax({
                         method: "DELETE",
                         url: myurl,

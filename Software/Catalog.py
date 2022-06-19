@@ -106,7 +106,7 @@ class WebPage:
 	def device_registration(self):
 		return open("template/device_registration.html").read()		# register a device
 	@cherrypy.expose
-	def ms_registration(self):
+	def service_registration(self):
 		return open("template/service_registration.html").read()	# register a microservice
 	@cherrypy.expose
 	def patient_update(self):
@@ -121,8 +121,11 @@ class WebPage:
 	def service_update(self):
 		return open("template/service_update.html").read()			# update a microservice
 	@cherrypy.expose
-	def user_delete(self):
-		return open("template/user_delete.html").read()				# delete a user (both doctors and patients)
+	def doctor_delete(self):
+		return open("template/doctor_delete.html").read()			# delete a doctors
+	@cherrypy.expose
+	def patient_delete(self):
+		return open("template/user_delete.html").read()				# delete a patient
 	@cherrypy.expose
 	def device_delete(self):
 		return open("template/device_delete.html").read()			# delete a device

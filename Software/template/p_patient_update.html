@@ -30,7 +30,7 @@
                         <input type="text" id="thingspeak_rkey" required>
                         <span class="details">ThingSpeak read key:</span>
                         <input type="text" id="thingspeak_wkey" required>
-                        <input type="submit">
+                        <input type="submit" value="Submit">
                     </div>
                 </form>
         </div>
@@ -58,7 +58,7 @@
                     thingspeak_wkey = $("#thingspeak_wkey").val();
                     telegramID = old.telegramID;
                     devicesList = old.devicesList;
-                    myurl = "/api/user"; 
+                    myurl = "/api/patient"; 
                     $.ajax({
                         method: "PUT",
                         url: myurl,
