@@ -6,6 +6,8 @@
         <title>Patient Monitoring - Doctor Registration</title>
         <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
         <link rel="stylesheet" href="css/style.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
 
@@ -15,16 +17,16 @@
         <h1 style="text-align: center;">Patient Monitoring - Doctor Registration</h1>
         <div class="container">
             <p style="text-align: center;">
-            <input type="button" onclick="document.location.href='/';" value="Homepage"><br></p>
+            <input type="button" onclick="document.location.href='/admin_index';" value="Index"><br></p>
                 <form onsubmit="sendPOSTrequest()">
                     <div class="user_info">
                         <span class="details">UserID:</span>
-                        <input type="text" name="userID" required>
+                        <input type="text" id="userID" required>
                         <span class="details">Name:</span>
-                        <input type="text" name="name" required>
+                        <input type="text" id="name" required>
                         <span class="details">Password:</span>
-                        <input type="password" name="password" required>
-                        <input type="submit">
+                        <input type="password" id="password" required>
+                        <input type="submit" value="Submit">
                     </div>
                 </form>
         </div>
@@ -34,19 +36,24 @@
                 userID = $("#userID").val();
                 name = $("#name").val();
                 password = $("#password").val();
-                var myurl = "/api/device";  
+                telegramID = "";
+                patientsList = "";
+                myurl = "/api/device";  
                 $.ajax({
                     method: "POST",
                     url: myurl,
                     contentType: "application/json",
                     data: JSON.stringify({
-                        userID: userID,
                         name: name,
+                        userID: userID,
                         password: password,
+                        telegramID: telegramID,
+			            patientsList: patientsList
                     }),
                     dataType: "json",
                     complete: function (r) {
                         alert(r.responseText)
+                        location.reload(); 
                     },
                 });
             }

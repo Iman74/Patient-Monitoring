@@ -20,8 +20,9 @@ p{
     /*Padding is used to create space around an element's content,
      inside of any defined borders.*/
     padding: 15px;
-    width: 400px;
-    left: 540px;
+    width: 40%;
+    left: 30%;
+    right: 30%;
     top: 30px;
     border-radius: 10px;
 }
@@ -69,4 +70,43 @@ input[type=button], input[type=submit]{
     background-color: #f8f8f8;
     font-size: 16px;
     resize:both;
+}
+.container_table{
+    justify-content: center;
+    position: relative;
+    /*background-color: rgba(147, 213, 228, 0.49);*/
+    background-color: rgba(116, 212, 204,0.5);
+    box-shadow: 5px 5px #62778293;
+    /*Padding is used to create space around an element's content,
+     inside of any defined borders.*/
+    padding: 15px;
+    width: 70%;
+    left: 15%;
+    right: 15%;
+    top: 30px;
+    border-radius: 10px;
+}
+table {
+    width: 100%;
+    margin: 20px auto;
+    table-layout: fixed;
+    /* width: 600px; */
+  }
+
+
+table,td,th {
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+th,td {
+    background-color: #f2f6f5;
+    padding: 10px;
+    border: solid 1px;
+    text-align: center;
+    }
+td {
+    word-wrap: break-word;
 }

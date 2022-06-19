@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>Patient Monitoring - Patient Register</title>
+        <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
+        <link rel="stylesheet" href="css/style.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+
+    <body>
+
+        <h1 style="text-align: center;">Patient Monitoring - Patient Registration</h1>
+        <div class="container">
+            <p style="text-align: center;">
+            <input type="button" onclick="document.location.href='/doctor_index';" value="Index"><br></p>
+                <form onsubmit="sendPOSTrequest()" >     
+                    <div class="user_info">
+                        <span class="details">Name:</span>
+                        <input type="text" id="name" required>
+                        <span class="details">UserID:</span>
+                        <input type="text" id="userID" required>
+                        <span class="details">Password:</span>
+                        <input type="password" id="password" required>
+                        <span class="details">ThingSpeak Channel ID:</span>
+                        <input type="text" id="thingspeak_chID" required>
+                        <span class="details">ThingSpeak write key:</span>
+                        <input type="text" id="thingspeak_rkey" required>
+                        <span class="details">ThingSpeak read key:</span>
+                        <input type="text" id="thingspeak_wkey" required>
+                        <input type="submit" value="Submit">
+                    </div>
+                </form>
+    </div>
+    <script>
+        function sendPOSTrequest() {
+            docID = sessionStorage.getItem('userID');
+            name = $("#name").val();
+            userID = $("#userID").val();
+            password = $("#password").val();
+            telegramID = "";
+            thingspeak_chID = $("#thingspeak_chID").val();
+            thingspeak_rkey = $("#thingspeak_rkey").val();
+            thingspeak_wkey = $("#thingspeak_wkey").val();
+            devicesList = "";
+            myurl = "/api/patient/"+docID; 
+            $.ajax({
+                method: "POST",
+                url: myurl,
+                contentType: "application/json",
+                data: JSON.stringify({
+                    name: name,
+                    userID: userID,
+                    password: password,
+                    telegramID: telegramID,
+                    thingspeak_chID: thingspeak_chID,
+                    thingspeak_rkey: thingspeak_rkey,
+                    thingspeak_wkey: thingspeak_wkey,
+                    devicesList: devicesList
+                }),
+                dataType: "json",
+                complete: function (r) {
+                    alert(r.responseText);
+                    location.reload(); 
+                }
+            });
+        }
+
+</script>
+    </body>
+</html>

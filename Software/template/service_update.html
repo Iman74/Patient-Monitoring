@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>Patient Monitoring - Microservice Update</title>
+        <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
+        <link rel="stylesheet" href="css/style.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+
+    <body>
+
+        <h1 style="text-align: center;">Patient Monitoring - Microservice Update</h1>
+        <div class="container">
+            <p style="text-align: center;">
+            <input type="button" onclick="document.location.href='/admin_index';" value="Index"><br></p>
+                <form onsubmit="sendGETrequest()" >     
+                    <div class="user_info">
+                        <span class="details">Name:</span>
+                        <input type="text" id="name" required>
+                        <span class="details">Endpoint:</span>
+                        <input type="text" id="endpoint" required>
+                        <span class="details">Protocol:</span>
+                        <input type="text" id="protocol" required>
+                        <input type="submit" value="Submit">
+                    </div>
+                </form>
+    </div>
+    <script>
+        function sendGETrequest() {
+                    event.preventDefault();
+                    name = $("#name").val();
+                    myurl = "/api/microservice/"+name; 
+                    $.ajax({
+                        method: "GET",
+                        url: myurl,
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function (response) {
+                            sendPUTrequest(response);
+                        }
+                    });
+                }
+        function sendPUTrequest(old) {
+            name = $("#name").val();
+            endpoint = $("#endpoint").val();
+            protocol = $("#protocol").val();
+            myurl = "/api/microservice"; 
+            $.ajax({
+                method: "PUT",
+                url: myurl,
+                contentType: "application/json",
+                data: JSON.stringify({
+                    name: name,
+                    endpoint: endpoipnt,
+                    protocol: protocol
+                }),
+                dataType: "json",
+                complete: function (r) {
+                    alert(r.responseText);
+                    location.reload(); 
+                }
+            });
+        }
+
+</script>
+    </body>
+</html>

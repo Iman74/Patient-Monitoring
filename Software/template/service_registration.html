@@ -3,9 +3,11 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
-        <title>Patient Monitoring - Patient Register</title>
+        <title>Patient Monitoring - Microservice Registration</title>
         <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
         <link rel="stylesheet" href="css/style.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
 
@@ -15,16 +17,16 @@
         <h1 style="text-align: center;">Patient Monitoring - Microservice Registration</h1>
         <div class="container">
             <p style="text-align: center;">
-            <input type="button" onclick="document.location.href='/';" value="Homepage"><br></p>
+            <input type="button" onclick="document.location.href='/admin_index';" value="Index"><br></p>
                 <form onsubmit="sendPOSTrequest()" >     
                     <div class="user_info">
                         <span class="details">Name:</span>
-                        <input type="text" name="name" required>
+                        <input type="text" id="name" required>
                         <span class="details">Endpoint:</span>
-                        <input type="text" name="endpoint" required>
+                        <input type="text" id="endpoint" required>
                         <span class="details">Protocol:</span>
-                        <input type="text" name="protocol" required>
-                        <input type="submit">
+                        <input type="text" id="protocol" required>
+                        <input type="submit" value="Submit">
                     </div>
                 </form>
     </div>
@@ -33,7 +35,7 @@
             name = $("#name").val();
             endpoint = $("#endpoint").val();
             protocol = $("#protocol").val();
-            var myurl = "/api/microservice"; 
+            myurl = "/api/microservice"; 
             $.ajax({
                 method: "POST",
                 url: myurl,
@@ -46,6 +48,7 @@
                 dataType: "json",
                 complete: function (r) {
                     alert(r.responseText)
+                    location.reload(); 
                 }
             });
         }

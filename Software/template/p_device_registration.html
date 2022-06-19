@@ -5,20 +5,17 @@
         <meta charset="utf-8" />
         <title>Patient Monitoring - Device Register</title>
         <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
-        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="css/style.css" />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
-
-
     <body>
-
         <h1 style="text-align: center;">Patient Monitoring - Device Registration</h1>
         <div class="container">
             <p style="text-align: center;">
-            <input type="button" onclick="document.location.href='/';" value="Homepage"><br></p>
-                <form onsubmit="sendPUTrequest()" >    
+            <input type="button" onclick="document.location.href='/patient_index';" value="Index"><br></p>
+                <form onsubmit="sendPOSTrequest()">
                     <div class="user_info">
                         <span class="details">Device ID:</span>
                         <input type="text" id="deviceID" required>
@@ -45,37 +42,37 @@
                         </p>
                         <textarea class="text_area" id="serviceDetails" required>
                         </textarea>
-                        <input type="submit">
+                        <input type="submit" value="Submit">
                     </div>
                 </form>
         </div>
         <script>
-                function sendPUTrequest() {
-                    deviceID = $("#deviceID").val();
-                    deviceName = $("#name").val();
-                    measureType = $("#measureType").val();
-                    availableServices = $("#services").val();
-                    serviceDetails = $("#serviceDetails").val();
-                    var myurl = "/api/device";  
-                    $.ajax({
-                        method: "PUT",
-                        url: myurl,
-                        contentType: "application/json",
-                        data: JSON.stringify({
-                            deviceID: deviceID,
-                            deviceName: deviceName,
-                            measureType: measureType.split(","),
-                            availableServices: availableServices.split(","),
-                            serviceDetails: serviceDetails.split(",")
-                        }),
-                        dataType: "json",
-                        complete: function (r) {
-                            alert(r.responseText)
-                        },
-                    });
-                }
+            function sendPOSTrequest() {
+                userID = sessionStorage.getItem('userID');
+                deviceID = $("#deviceID").val();
+                deviceName = $("#name").val();
+                measureType = $("#measureType").val();
+                availableServices = $("#services").val();
+                serviceDetails = $("#serviceDetails").val();
+                myurl = "/api/device/"+userID;  
+                $.ajax({
+                    method: "POST",
+                    url: myurl,
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        deviceID: deviceID,
+                        deviceName: deviceName,
+                        measureType: measureType.split(","),
+                        availableServices: availableServices.split(","),
+                        serviceDetails: serviceDetails.split(",")
+                    }),
+                    dataType: "json",
+                    complete: function (r) {
+                        alert(r.responseText)
+                    },
+                });
+            }
 
-        </script>
-
+    </script>
     </body>
 </html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>Patient Monitoring - Admin Login</title>
+        <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
+        <link rel="stylesheet" href="css/style.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>        
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <h1 style="text-align: center;">Patient Monitoring - Admin Login</h1>
+        <div class="container">
+            <p style="text-align: center;">
+            <input type="button" onclick="document.location.href='/';" value="Homepage"><br></p>
+                <h2>Login</h2>
+                <form onsubmit="sendGETrequest()">
+                    <div class="user_info">
+                        <span class="details">UserID:</span>
+                        <input type="text" id="userID" required>
+                        <span class="details">Password:</span>
+                        <input type="password" id="password" required>
+                        <input type="submit" value="Submit">
+                    </div>
+                </form>
+            </div>
+            <script>
+                function sendGETrequest() {
+                    event.preventDefault();
+                    userID = $("#userID").val();
+                    password = $("#password").val();
+                    myurl = "/api/admin"; 
+                    $.ajax({
+                        method: "GET",
+                        url: myurl,
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function (response) {
+                            if (userID == response.userID && password == response.password) {
+                                alert("You have successfully logged in.");
+                                sessionStorage.setItem('userID', userID);
+                                document.location.href='/admin_index';
+                            } else {
+                                alert("Wrong password.");
+                                location.reload(); 
+                            };
+                        },
+                        error: function(response){
+                            alert("Wrong userID");
+                            location.reload();
+                        }
+                    });
+                }
+        </script>
+        </body>
+    </html>
+    

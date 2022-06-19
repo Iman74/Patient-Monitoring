@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>Patient Monitoring - Microservice Data</title>
+        <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
+        <link rel="stylesheet" href="css/style.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+
+    <body>
+
+        <h1 style="text-align: center;">Patient Monitoring - Microservice Data</h1>
+        <div class="container_table">
+            <p style="text-align: center;">
+                <input type="button" onclick="document.location.href='/admin_index';" value="Index"><br></p>
+                <span class="details">If you want to see all of them:</span>
+                <input type="button" onclick="document.location.href='/all_services';" value="All"><br></p>
+                <form onsubmit="sendGETrequest()" >    
+                    <div class="user_info">
+                        <span class="details">Insert name of the Microservice you want to view:</span>
+                        <input type="text" id="name" required>
+                        <input type="submit" value="Submit">
+                    </div>
+                </form>
+
+                <table class="table">
+                    <thead>
+                       <tr>
+                          <th scope="col">Name</th>
+                          <th scope="col">Endpoint</th>
+                          <th scope="col">Protocol</th>
+                       </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+        </div>
+        <script>
+                function sendGETrequest() {
+                    event.preventDefault();
+                    name = $("#name").val();
+                    myurl = "/api/microservice/"+name; 
+                    $.ajax({
+                        method: "GET",
+                        url: myurl,
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function (response) {
+                            updateTable(response);
+                        }
+                    });
+                }
+                function updateTable(data) {
+                    updatedTableBody = "";
+                    updatedTableBody += "<tr>";
+                    updatedTableBody +=
+                                    "<td>"+
+                                    data.name+
+                                    "</td>"+
+                                    "<td>"+
+                                    data.endpoint+
+                                    "</td>"+
+                                    "<td>"+
+                                    data.protocol+
+                                    "</td>";
+                    updatedTableBody += "</tr>";
+                    $("#tableBody").html(updatedTableBody);
+                }
+
+
+        </script>
+
+    </body>
+</html>

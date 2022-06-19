@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>Patient Monitoring - Patient Data</title>
+        <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
+        <link rel="stylesheet" href="css/style.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+
+    <body>
+
+        <h1 style="text-align: center;">Patient Monitoring - Patient Data</h1>
+        <div class="container_table">
+            <p style="text-align: center;">
+                <input type="button" onclick="document.location.href='/';" value="Homepage"><br></p>
+                <span class="details">If you want to see all of them:</span>
+                <input type="button" onclick="document.location.href='/all_patients';" value="All"><br></p>
+                <form onsubmit="sendGETrequest()" >    
+                    <div class="user_info">
+                        <span class="details">Insert UserID of the patient you want to view:</span>
+                        <input type="text" id="userID" required>
+                        <input type="submit" value="Submit">
+                    </div>
+                </form>
+
+                <table class="table">
+                    <thead>
+                       <tr>
+                          <th scope="col">Name</th>
+                          <th scope="col">UserID</th>
+                          <th scope="col">Telegram ID</th>
+                          <th scope="col">ThingSpeak Channel ID</th>
+                          <th scope="col">ThingSpeak read-key</th>
+                          <th scope="col">ThingSpeak write-key</th>
+                       </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+                <br><h3>Devices</h3></br>
+                <table class="table">
+                    <thead>
+                        <tr>
+                           <th scope="col">Name</th>
+                           <th scope="col">deviceID</th>
+                           <th scope="col">Measure Type</th>
+                           <th scope="col">Available Services</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody2">
+                    </tbody>
+                 </table>
+        </div>
+        <script>
+                function sendGETrequest() {
+                    event.preventDefault();
+                    userID = $("#userID").val();
+                    myurl = "/api/patient/"+userID; 
+                    $.ajax({
+                        method: "GET",
+                        url: myurl,
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function (response) {
+                            updateTable(response);
+                        }
+                    });
+                }
+                function updateTable(data) {
+                    updatedTableBody = "";
+                    updatedTableBody += "<tr>";
+                    updatedTableBody +=
+                                    "<td>"+
+                                    data.name+
+                                    "</td>"+
+                                    "<td>"+
+                                    data.userID+
+                                    "</td>"+
+                                    "<td>"+
+                                    data.telegramID+
+                                    "</td>"+
+                                    "<td>"+
+                                    data.thingspeak_chID+
+                                    "</td>"+
+                                    "<td>"+
+                                    data.thingSpeak_rkey+
+                                    "</td>"+
+                                    "<td>"+
+                                    data.thingSpeak_wkey+
+                                    "</td>";
+                    updatedTableBody += "</tr>";
+                    $("#tableBody").html(updatedTableBody);
+                    var updatedTableBody2 = "";
+                    for (var i = 0; i < data.devicesList.length; i++) {
+                        updatedTableBody2 += "<tr>";
+                        device = data.devicesList[i];
+                        updatedTableBody2 +=
+                            "<td>" +
+                            device.deviceID +
+                            "</td>" +
+                            "<td>" +
+                            device.deviceName +
+                            "</td>" +
+                            "<td>" +
+                            device.measureType +
+                            "</td>" +
+                            "<td>" +
+                            device.availableServices +
+                            "</td>";
+                        updatedTableBody2 += "</tr>";
+                    }
+                    $("#tableBody2").html(updatedTableBody2);
+                }
+
+
+        </script>
+
+    </body>
+</html>
