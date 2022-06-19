@@ -289,42 +289,42 @@ class RestAPI(object):
 								json.dump(self.file,open(self.filename,"w"),indent=4)
 								founded = True
 								return "Device updated"
-								break
-							else:
-								pass
-
-				if founded == False:
+				if founded != True:
 					return "This device doesn't exists."
 
-			# UPDATES A USER
-			elif str(uri[0]) =='user':
+			# UPDATES A DOCTOR
+			elif str(uri[0]) =='doctor':
 				founded = False
 				new = {}
 				new = cherrypy.request.json
 				doctors = self.file["doctorsList"]
-				try:
-					for doctor in range(len(doctors)):
-						if str(new['userID']) == str(doctors[doctor]['userID']):
-							doctors[doctor] = new
+				for doctor in range(len(doctors)):
+					if str(new['userID']) == str(doctors[doctor]['userID']):
+						doctors[doctor] = new
+						self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
+						json.dump(self.file,open(self.filename,"w"),indent=4)
+						founded = True
+						return "User updated"
+				if founded != True:
+					return "This doctor doesn't exists."
+
+			# UPDATES A PATIENT
+			elif str(uri[0]) =='patient':
+				founded = False
+				new = {}
+				new = cherrypy.request.json
+				doctors = self.file["doctorsList"]
+				for doctor in range(len(doctors)):
+					for patient in range(len(doctors[doctor]["patientsList"])):
+						if str(new['userID']) == str(doctors[doctor]["patientsList"][patient]['userID']):
+							doctors[doctor]["patientsList"][patient] = new
 							self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
 							json.dump(self.file,open(self.filename,"w"),indent=4)
 							founded = True
 							return "User updated"
-							break
-						else:
-							for patient in range(len(doctors[doctor]["patientsList"])):
-								if str(new['userID']) == str(doctors[doctor]["patientsList"][patient]['userID']):
-									doctors[doctor]["patientsList"][patient] = new
-									self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
-									json.dump(self.file,open(self.filename,"w"),indent=4)
-									founded = True
-									return "User updated"
-									raise StopIteration
-				except StopIteration:
-					pass
+				if founded != True:
+					return "This patient doesn't exists."
 
-				if founded == False:
-					return "This user doesn't exists."
 
 			# UPDATES A SERVICE
 			elif str(uri[0]) == 'microservice':
@@ -340,10 +340,7 @@ class RestAPI(object):
 						json.dump(self.file,open(self.filename,"w"),indent=4)
 						founded = True
 						return "Microservice updated"
-						break
-					else:
-						pass
-				if founded == False:
+				if founded != True:
 					return "This microservice doesn't exists."
 
 			else:
@@ -363,17 +360,13 @@ class RestAPI(object):
 					new = {}
 					new = cherrypy.request.json
 					doctors = self.file["doctorsList"]
-					try:
-						for doctor in range(len(doctors)):
-							for patient in range(len(doctors[doctor]["patientsList"])):
-								if str(uri[1]) == str(doctors[doctor]["patientsList"][patient]["userID"]):
-									for device in range(len(doctors[doctor]["patientsList"][patient]["devicesList"])):
-										if str(new['deviceID']) == str(doctors[doctor]["patientsList"][patient]["devicesList"][device]['deviceID']):
-											founded = True
-											raise StopIteration
-					except StopIteration:
-						pass
-										
+					for doctor in range(len(doctors)):
+						for patient in range(len(doctors[doctor]["patientsList"])):
+							if str(uri[1]) == str(doctors[doctor]["patientsList"][patient]["userID"]):
+								for device in range(len(doctors[doctor]["patientsList"][patient]["devicesList"])):
+									if str(new['deviceID']) == str(doctors[doctor]["patientsList"][patient]["devicesList"][device]['deviceID']):
+										founded = True
+										return "A device with this ID already exists."			
 					if founded != True:
 						for doctor in range(len(doctors)):
 							for patient in range(len(doctors[doctor]["patientsList"])):
@@ -382,9 +375,7 @@ class RestAPI(object):
 									self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
 									doctors[doctor]["patientsList"][patient]["devicesList"][device]['timestamp']=time.strftime("%d-%m-%Y %H:%M:%S")
 									json.dump(self.file,open(self.filename,"w"),indent=4)
-									return "Device registered."
-					else:
-						return "A device with this ID already exists."
+									return "Device registered."						
 				else:
 					raise cherrypy.HTTPError(400,"Wrong number of uri provided.")
 
@@ -398,14 +389,12 @@ class RestAPI(object):
 				for doctor in range(len(doctors)):
 					if str(new['userID']) == str(doctors[doctor]['userID']):
 						founded = True
-						break
+						return "A doctor with this ID already exists."
 				if founded != True:
 					doctors.append(new)
 					self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
 					json.dump(self.file,open(self.filename,"w"),indent=4)
 					return "Doctor registered."
-				else:
-					return "A doctor with this ID already exists."
 
 			# ADDS A NEW PATIENT
 			elif str(uri[0])=='patient':
@@ -419,15 +408,14 @@ class RestAPI(object):
 							for patient in range(len(doctors[doctor]["patientsList"])):
 								if str(new['userID']) == str(doctors[doctor]["patientsList"][patient]["userID"]):
 									founded = True
+									return "A patient with this ID already exists."
 					if founded != True:
 						for doctor in range(len(doctors)):
 							if str(uri[1]) == str(doctors[doctor]['userID']):
 								doctors[doctor]["patientsList"].append(new)
 								self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
 								json.dump(self.file,open(self.filename,"w"),indent=4)
-						return "Patient registered."
-					else:
-						return "A patient with this ID already exists."
+								return "Patient registered."		
 				else:
 					raise cherrypy.HTTPError(400,"Wrong number of uri provided.")
 
@@ -440,15 +428,13 @@ class RestAPI(object):
 				for service in range(len(services)):
 					if str(new['name']) == str(services[service]['name']).lower():
 						founded = True
-						break
+						return "A service with this ID already exists."
 				if founded != True:
 					services.append(new)
 					self.file["microservices"] = services
 					self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
 					json.dump(self.file,open(self.filename,"w"),indent=4)
-					return "Microservice registered"
-				else:
-					return "A service with this ID already exists."
+					return "Microservice registered"				
 			else:
 				raise cherrypy.HTTPError(404,"The uri entered is incorrect.")
 		else: 
@@ -463,26 +449,21 @@ class RestAPI(object):
 					founded = False
 					doctors = self.file["doctorsList"]
 					for doctor in range(len(doctors)):
-						try:
-							for patient in range(len(doctors[doctor]["patientsList"])):
-								for device in range(len(doctors[doctor]["patientsList"][patient]["devicesList"])):
-									if str(uri[1])== str(doctors[doctor]["patientsList"][patient]["devicesList"][device]['deviceID']):
-										doctors[doctor]["patientsList"][patient]["devicesList"].pop(device)
-										self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
-										json.dump(self.file,open(self.filename,"w"),indent=4)
-										founded = True
-										return "Device deleted"
-										raise StopIteration
-										
-						except StopIteration:
-							break
+						for patient in range(len(doctors[doctor]["patientsList"])):
+							for device in range(len(doctors[doctor]["patientsList"][patient]["devicesList"])):
+								if str(uri[1])== str(doctors[doctor]["patientsList"][patient]["devicesList"][device]['deviceID']):
+									doctors[doctor]["patientsList"][patient]["devicesList"].pop(device)
+									self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
+									json.dump(self.file,open(self.filename,"w"),indent=4)
+									founded = True
+									return "Device deleted"
 					if founded != True:
 						return "Device with this deviceID doesn't exist."
 				else:
 					raise cherrypy.HTTPError(400,"Wrong number of uri provided.")
 
-			# DELETE A USER
-			elif str(uri[0]) == 'user':
+			# DELETE A DOCTOR
+			elif str(uri[0]) == 'doctor':
 				if len(uri)==2:
 					founded = False
 					doctors = self.file["doctorsList"]
@@ -492,22 +473,26 @@ class RestAPI(object):
 							json.dump(self.file,open(self.filename,"w"),indent=4)
 							founded = True
 							return "User deleted"
-							break
-						else:
-							try:
-								for patient in range(len(doctors[doctor]["patientsList"])):
-									if str(uri[1]) == str(doctors[doctor]["patientsList"][patient]['userID']):
-										doctors[doctor]["patientsList"].pop(patient)
-										self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
-										json.dump(self.file,open(self.filename,"w"),indent=4)
-										founded = True
-										return "User deleted"
-										raise StopIteration
-							except StopIteration:
-								pass
-
 					if founded == False:
 						return "This user doesn't exists."
+				else:
+					raise cherrypy.HTTPError(400,"Wrong number of uri provided.")
+
+			# DELETE A PATIENT
+			elif str(uri[0]) == 'patient':
+				if len(uri)==2:
+					founded = False
+					doctors = self.file["doctorsList"]
+					for doctor in range(len(doctors)):
+						for patient in range(len(doctors[doctor]["patientsList"])):
+							if str(uri[1]) == str(doctors[doctor]["patientsList"][patient]['userID']):
+								doctors[doctor]["patientsList"].pop(patient)
+								self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
+								json.dump(self.file,open(self.filename,"w"),indent=4)
+								founded = True
+								return "User deleted"
+					if founded == False:
+						return "This patient doesn't exists."
 				else:
 					raise cherrypy.HTTPError(400,"Wrong number of uri provided.")
 
@@ -522,7 +507,6 @@ class RestAPI(object):
 							json.dump(self.file,open(self.filename,"w"),indent=4)
 							founded = True
 							return "Service deleted"
-							break
 					if founded != True:
 						return "Service with this name doesn't exist."
 				else:
