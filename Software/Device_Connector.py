@@ -304,10 +304,10 @@ if __name__ == "__main__":
     port = int(requests.get(addressCatalog+'/port').text)
     baseTopic = requests.get(addressCatalog+'/base_topic').text
 
-    sensorID_o = "s_"+"0x05"
-    sensorID_rT = "s_"+"0x06"
-    sensorID_h = "s_"+"0x07"
-    sensorID_bT = "s_"+"0x08"
+    sensorID_o = "s_"+"0x01"
+    sensorID_rT = "s_"+"0x02"
+    sensorID_h = "s_"+"0x03"
+    sensorID_bT = "s_"+"0x04"
 
     sensor = Publisher(baseTopic,["/roomTemperature","/bodyTemperature",
                           "/heartRate","/oxygen"], broker, port)
