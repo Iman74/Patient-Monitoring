@@ -72,9 +72,10 @@ class GetData_From_Catalog:
 					pid=str(self.patientsID[b])
 					sid=str(self.sensorsID[c])
 					self.TOPIC.append(bt+'/'+pid+'/'+sid)
-		for t in range(len(self.topics)):
-			self.top.append(self.TOPIC[t]+self.topics[t])
-		return self.top
+		# for t in range(len(self.topics)):
+		# 	self.top.append(self.TOPIC[t]+self.topics[t])
+		# return self.top
+		return self.TOPIC
 
 
 #MQTT subscriber to obtain sensors' data
@@ -187,8 +188,10 @@ class ThingSpeak_subscriber:
 
 if __name__ == "__main__":
 	conf = json.load(open("thingspeak_settings.json"))
+	g_conf = json.load(open("settings.json"))
+
 	QoS=conf["QoS"]
-	catalog_url=conf["catalog_address"]
+	catalog_url=g_conf["catalog_address"]
 	broker, port, baseTopic=get_broker(catalog_url)
 	
 	client=GetData_From_Catalog(catalog_url, baseTopic)
