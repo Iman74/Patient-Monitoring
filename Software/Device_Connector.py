@@ -285,8 +285,8 @@ class Publisher:
                 message['e']['t'] = message_o['e']['t']
                 message['e']['u'] = '%'
             topic_ = '/'.join((baseTopic,patientID,sensorID))
-            topic_ = topic_+t
-            json.dumps(message)
+            # topic_ = topic_+t
+            # json.dumps(message)
             self.client.myPublish(topic_,message)
             print(f"\nPublished on {topic_}")
 
@@ -313,7 +313,7 @@ if __name__ == "__main__":
                           "/heartRate","/oxygen"], broker, port)
     sensor.start()
     range_h="normal"
-    range_rT="normal room"
+    range_rT="cold room"
     range_bT="normal"
     range_o="hypoxia"
     # range_h=input('\nAvailable range:\nbradycardia\nnormal\ntachycardia\nquit\n') 
