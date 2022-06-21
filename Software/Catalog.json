@@ -1,5 +1,5 @@
 {
-    "lastUpdate": "19-06-2022 20:18:25",
+    "lastUpdate": "21-06-2022 21:32:40",
     "doctorsList": [
         {
             "name": "Sheldon Cooper",
@@ -17,22 +17,6 @@
                     "thingspeak_wkey": "",
                     "devicesList": [
                         {
-                            "deviceID": "s_0x03",
-                            "deviceName": "SensorHR",
-                            "measureType": "heartrate",
-                            "availableServices": "MQTT",
-                            "servicesDetails": [
-                                {
-                                    "serviceType": "MQTT",
-                                    "serviceIP": "test.mosquitto.org",
-                                    "topic": [
-                                        "/heartRate"
-                                    ]
-                                }
-                            ],
-                            "lastUpdate": "19-06-2022 20:18:25"
-                        },
-                        {
                             "deviceID": "s_0x02",
                             "deviceName": "SensorRT",
                             "measureType": "temperature",
@@ -46,7 +30,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "19-06-2022 20:18:25"
+                            "lastUpdate": "21-06-2022 21:32:40"
                         },
                         {
                             "deviceID": "s_0x04",
@@ -62,7 +46,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "19-06-2022 20:18:25"
+                            "lastUpdate": "21-06-2022 21:32:40"
                         },
                         {
                             "deviceID": "s_0x01",
@@ -78,55 +62,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "19-06-2022 20:18:25"
-                        },
-                        {
-                            "deviceID": "s_0x06",
-                            "deviceName": "SensorRT",
-                            "measureType": "temperature",
-                            "availableServices": "MQTT",
-                            "servicesDetails": [
-                                {
-                                    "serviceType": "MQTT",
-                                    "serviceIP": "test.mosquitto.org",
-                                    "topic": [
-                                        "/roomTemperature"
-                                    ]
-                                }
-                            ],
-                            "lastUpdate": "19-06-2022 20:16:16"
-                        },
-                        {
-                            "deviceID": "s_0x08",
-                            "deviceName": "SensorBT",
-                            "measureType": "temperature",
-                            "availableServices": "MQTT",
-                            "servicesDetails": [
-                                {
-                                    "serviceType": "MQTT",
-                                    "serviceIP": "test.mosquitto.org",
-                                    "topic": [
-                                        "/bodyTemperature"
-                                    ]
-                                }
-                            ],
-                            "lastUpdate": "19-06-2022 20:16:16"
-                        },
-                        {
-                            "deviceID": "s_0x05",
-                            "deviceName": "SensorO",
-                            "measureType": "heartrate",
-                            "availableServices": "MQTT",
-                            "servicesDetails": [
-                                {
-                                    "serviceType": "MQTT",
-                                    "serviceIP": "test.mosquitto.org",
-                                    "topic": [
-                                        "/oxygen"
-                                    ]
-                                }
-                            ],
-                            "lastUpdate": "19-06-2022 20:16:16"
+                            "lastUpdate": "21-06-2022 21:32:40"
                         }
                     ]
                 },
@@ -140,7 +76,7 @@
                     "thingspeak_wkey": "",
                     "devicesList": [
                         {
-                            "deviceID": "s_0x07",
+                            "deviceID": "s_0x03",
                             "deviceName": "SensorHR",
                             "measureType": "heartrate",
                             "availableServices": "MQTT",
@@ -153,7 +89,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "19-06-2022 20:16:16"
+                            "lastUpdate": "21-06-2022 21:32:40"
                         }
                     ]
                 },
@@ -194,5 +130,9 @@
     "telegramToken": "5354444090:AAGcdO3eaNI5I2pYCVx86zFDmuxQb8__Kus",
     "broker": "test.mosquitto.org",
     "port": 1883,
-    "baseTopic": "Patient_Monitor_2022"
+    "baseTopic": "Patient_Monitor_2022",
+    "admin": {
+        "userID": "admin",
+        "password": "admin"
+    }
 }
