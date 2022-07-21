@@ -34,9 +34,7 @@ class PatientMonitoringBOT:
         # Patient keyboard
         self.keyboardP = InlineKeyboardMarkup(inline_keyboard=[
                             [InlineKeyboardButton(text='Body Temperature', callback_data='/bodytemperature')],
-                            [InlineKeyboardButton(text='Room Temperature', callback_data='/roomtemperature')],
-                            [InlineKeyboardButton(text='Open Window', callback_data='/openwindow')],
-                            [InlineKeyboardButton(text='Close Window', callback_data='/closewindow')]
+                            [InlineKeyboardButton(text='Room Temperature', callback_data='/roomtemperature')]
                         ])
         # Doctor keyboards
         self.keyboardD = InlineKeyboardMarkup(inline_keyboard=[

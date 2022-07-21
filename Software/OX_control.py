@@ -1,5 +1,6 @@
 import random 
 import json 
+import requests
 from MyMQTT import * 
 import time 
 from os.path import exists
@@ -107,11 +108,13 @@ class OX_Controller:
             print("Window closed")
                 
 if __name__ == '__main__': 
-    conf=json.load(open("settings.json")) 
-    broker = conf["broker"] 
-    port = conf["port"] 
-    baseTopic = conf["baseTopic"]
-    topic = baseTopic + "/#" 
+    conf=json.load(open("settings.json"))  
+    catalogIP = conf["catalog_address"]
+    broker = requests.get(catalogIP+'/broker').text
+    port = int(requests.get(catalogIP+'/port').text)
+    baseTopic = requests.get(catalogIP+'/base_topic').text
+    token = requests.get(catalogIP+'/token').text
+    topic = baseTopic + "/#"  
     
     OX_Control = OX_Controller("PatientMonitoring_OX_Controller",topic,broker,port) 
     OX_Control.run() 

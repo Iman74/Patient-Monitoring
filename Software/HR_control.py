@@ -1,5 +1,6 @@
 import random 
-import json 
+import json
+import requests 
 from MyMQTT import * 
 import time 
 from os.path import exists
@@ -77,10 +78,12 @@ class HR_controller:
                 self.client.myPublish(response_topic, response)
 
 if __name__ == '__main__': 
-    conf=json.load(open("settings.json")) 
-    broker = conf["broker"] 
-    port = conf["port"] 
-    baseTopic = conf["baseTopic"]
+    conf=json.load(open("settings.json"))  
+    catalogIP = conf["catalog_address"]
+    broker = requests.get(catalogIP+'/broker').text
+    port = int(requests.get(catalogIP+'/port').text)
+    baseTopic = requests.get(catalogIP+'/base_topic').text
+    token = requests.get(catalogIP+'/token').text
     topic = baseTopic + "/#" 
     
     HR_control = HR_controller("PatientMonitoring_HR_Controller",topic,broker,port) 

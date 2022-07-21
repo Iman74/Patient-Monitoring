@@ -1,5 +1,6 @@
 import random 
 import json 
+import requests
 from MyMQTT import * 
 import time 
 from os.path import exists
@@ -94,7 +95,7 @@ class BT_Controller:
         name = response['e']['n'] 
         
         if name == "Warning/Fever" or name == "Warning/High Fever":
-            payload = self._message.copy()
+            payload = self.__message.copy()
             payload['e']['n'] = "window"
             payload['e']['v'] = 0              # Open
             payload['e']['t'] = time.time()
@@ -102,7 +103,7 @@ class BT_Controller:
             print("Window Opened")
             
         if name == "Warning/Hypothermia":
-            payload = self._message.copy()
+            payload = self.__message.copy()
             payload['e']['n'] = "window"
             payload['e']['v'] = 1              # Closed
             payload['e']['t'] = time.time()
@@ -113,7 +114,7 @@ class BT_Controller:
         name = response['e']['n'] 
         
         if name == "Warning/Hypothermia":
-            payload = self._message.copy()
+            payload = self.__message.copy()
             payload['e']['n'] = "heating"
             payload['e']['v'] = 0              # On
             payload['e']['t'] = time.time()
@@ -121,7 +122,7 @@ class BT_Controller:
             print("Central heating switched on")
             
         if name == "Warning/Fever" or name == "Warning/High Fever":
-            payload = self._message.copy()
+            payload = self.__message.copy()
             payload['e']['n'] = "heating"
             payload['e']['v'] = 1              # Off
             payload['e']['t'] = time.time()
@@ -129,12 +130,13 @@ class BT_Controller:
             print("Central heating switched off")
                             
 if __name__ == '__main__': 
-    conf=json.load(open("settings.json")) 
-    broker = conf["broker"] 
-    port = conf["port"] 
-    baseTopic = conf["baseTopic"]
+    conf=json.load(open("settings.json"))  
+    catalogIP = conf["catalog_address"]
+    broker = requests.get(catalogIP+'/broker').text
+    port = int(requests.get(catalogIP+'/port').text)
+    baseTopic = requests.get(catalogIP+'/base_topic').text
+    token = requests.get(catalogIP+'/token').text
     topic = baseTopic + "/#" 
-    
     BT_Control = BT_Controller("PatientMonitoring_BT_Controller",topic,broker,port) 
     BT_Control.run() 
 
