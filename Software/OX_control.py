@@ -11,10 +11,11 @@ class OX_Controller:
         self.clientID=clientID 
         self.topic=topic 
         self.client=MyMQTT(clientID,broker,port,self) 
-        self.message_window = {
-                                "bn": "",
-                                "e": {"n": "window","v": "","t": "","u": "bool"}
-                            } 
+        self.__message = {
+                        "bn": "",
+                        "e": {"n": "","v": "","t": "","u": "bool"}
+                    } 
+        
     def run(self): 
         self.client.start() 
         print('{} has started'.format(self.clientID)) 
@@ -81,25 +82,25 @@ class OX_Controller:
                 print("warning topic: {}".format(response_topic))    
                 print(f'{name}: {round(value,2)} {unit} at {time.strftime("%D %H:%M", time.localtime(int(timestamp)))}.') 
                 self.client.myPublish(response_topic, response)
-                self.RoomAdjust(topic)
+                self.RoomAdjust(topic,response)
             
-    def RoomAdjust(self,topic):
-        self.window_adjust(topic)
+    def RoomAdjust(self,topic,response):
+        self.window_adjust(topic,response)
     
-    def window_adjust(self,topic):
-        action = int(input("Type:\n\
-                        0: if you want to open the window\n\
-                        1: if you want to close the window\n"))
+    def window_adjust(self,topic,response):
+        name = response['e']['n'] 
         
-        if action == 0:
-            payload = self.message_window.copy()
+        if name == "Hypoxia":
+            payload = self.__message.copy()
+            payload['e']['n'] = "window"
             payload['e']['v'] = 0              # Open
             payload['e']['t'] = time.time()
             self.client.myPublish(topic+"/Window", payload)
             print("Window Opened")
             
-        if action == 1:
-            payload = self.message_window.copy()
+        else:
+            payload = self.__message.copy()
+            payload['e']['n'] = "window"
             payload['e']['v'] = 1              # Closed
             payload['e']['t'] = time.time()
             self.client.myPublish(topic+"/Window", payload)

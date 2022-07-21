@@ -11,13 +11,9 @@ class BT_Controller:
         self.clientID=clientID 
         self.topic=topic 
         self.client=MyMQTT(clientID,broker,port,self)
-        self.message_window = {
+        self.__message = {
                                 "bn": "",
-                                "e": {"n": "window","v": "","t": "","u": "bool"}
-                            } 
-        self.message_heating = {
-                                "bn": "",
-                                "e": {"n": "heating","v": "","t": "","u": "bool"}
+                                "e": {"n": "","v": "","t": "","u": "bool"}
                             } 
 
     def run(self): 
@@ -88,49 +84,49 @@ class BT_Controller:
                 print(f'{name}: {round(value,2)} {unit} at {time.strftime("%D %H:%M", time.localtime(int(timestamp)))}.') 
                 self.client.myPublish(response_topic, response)
                 # there are some issues so we need to adjust something int the room
-                self.RoomAdjust(topic)
+                self.RoomAdjust(topic, response)
             
-    def RoomAdjust(self,topic):
-        self.window_adjust(topic)
-        self.heating_adjust(topic)
+    def RoomAdjust(self,topic,response):
+        self.window_adjust(topic,response)
+        self.heating_adjust(topic,response)
     
-    def window_adjust(self,topic):
-        action = int(input("Type:\n\
-                        0: if you want to open the window\n\
-                        1: if you want to close the window\n"))
-
-        if action == 0:
-            payload = self.message_window.copy()
+    def window_adjust(self,topic, response):
+        name = response['e']['n'] 
+        
+        if name == "Warning/Fever" or name == "Warning/High Fever":
+            payload = self._message.copy()
+            payload['e']['n'] = "window"
             payload['e']['v'] = 0              # Open
             payload['e']['t'] = time.time()
             self.client.myPublish(topic+"/Window", payload)
             print("Window Opened")
             
-        if action == 1:
-            payload = self.message_window.copy()
+        if name == "Warning/Hypothermia":
+            payload = self._message.copy()
+            payload['e']['n'] = "window"
             payload['e']['v'] = 1              # Closed
             payload['e']['t'] = time.time()
             self.client.myPublish(topic+"/Window", payload)
             print("Window closed")
             
-    def heating_adjust(self,topic):
-        action = int(input("Type:\n\
-                        0: if you want to switch on the central heating\n\
-                        1: if you want to switch off the central heating\n"))
+    def heating_adjust(self,topic, response):
+        name = response['e']['n'] 
         
-        if action == 0:
-            payload = self.message_heating.copy()
+        if name == "Warning/Hypothermia":
+            payload = self._message.copy()
+            payload['e']['n'] = "heating"
             payload['e']['v'] = 0              # On
             payload['e']['t'] = time.time()
             self.client.myPublish(topic+"/Heating", payload)
-            print("Window Opened")
+            print("Central heating switched on")
             
-        if action == 1:
-            payload = self.message_heating.copy()
+        if name == "Warning/Fever" or name == "Warning/High Fever":
+            payload = self._message.copy()
+            payload['e']['n'] = "heating"
             payload['e']['v'] = 1              # Off
             payload['e']['t'] = time.time()
             self.client.myPublish(topic+"/Heating", payload)
-            print("Window closed")
+            print("Central heating switched off")
                             
 if __name__ == '__main__': 
     conf=json.load(open("settings.json")) 
