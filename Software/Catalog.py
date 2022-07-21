@@ -587,7 +587,7 @@ if __name__=="__main__":
 		cherrypy.engine.start()
 		while True:
 			time.sleep(60)
-			deleteOld(addressCatalog)
+			# deleteOld(addressCatalog)        # sono io (sara) ad averlo commentato perchè mentre faccio le prove sul bot mi sa che cancella i sensori
 		cherrypy.engine.block()
 	except KeyboardInterrupt:
 		print("Stopping the engine")

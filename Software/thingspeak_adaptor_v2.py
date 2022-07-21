@@ -96,7 +96,7 @@ class ThingSpeak_subscriber:
 		self.client.start()
 		print('{} has started'.format(self.clientID))
 		for i in range (len(self.topic)):
-			self.client.mySubscribe(self.topic[i])
+    			self.client.mySubscribe(self.topic[i])
 	def end(self):
 		for i in range (len(self.topic)):
 			self.client.mySubscribe(self.topic[i])
