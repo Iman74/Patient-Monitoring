@@ -15,8 +15,8 @@ class BT_Controller:
         self.__message = {
                                 "bn": "",
                                 "e": {"n": "","v": "","t": "","u": "bool"}
-                            } 
-
+                            }  
+ 
     def run(self): 
         self.client.start() 
         print('{} has started'.format(self.clientID)) 
@@ -34,22 +34,17 @@ class BT_Controller:
         value = message['e']['v'] 
         
         is_response = False   
-        # if (name == "oxygen"):        # non ci dovrebbe essere bisogno di queste condizioni perchè controllo il sensore prima di fare l'healthcheck
-        if value>= 35.6 and value<= 37.4:
-            # do nothing - Normal Body Temperature
+        if (value>= 20.0 and  value<= 22.0):
+            # do nothing - Normal Room Temperature
             pass
-        elif value>= 37.5 and value<= 39.4:
-            # High Fever
-            message['e']['n'] = "Fever"
+        elif (value> 22.0 and value< 50.0):
+            # Hot Room
+            message['e']['n'] = "Hot Room"
             is_response = True
-        elif value>= 39.5 and  value<= 42:
-            # High Fever
-            message['e']['n'] = "High Fever"
-            is_response = True  
-        elif value>= 33.0 and  value<= 35.5:
-            # Hypothermia
-            message['e']['n'] = "Hypothermia"
-            is_response = True            
+        elif (value < 20.0 and value > -10.0):
+            # Cold Room
+            message['e']['n'] = "Cold Room"
+            is_response = True
         else:
             #sensor problem - no value given
             message['e']['n'] = "Value Error"
@@ -72,11 +67,10 @@ class BT_Controller:
         timestamp = message['e']['t'] 
         # I take the sensor code
         conf = json.load(open("settings.json"))
-        sensor_rt = conf["sensors_dict"]["body temperature"]
+        sensor_rt = conf["sensors_dict"]["room temperature"]
         
         # CALL microservice here
-        t_source = topic.split('/')
-        if t_source[-1] == sensor_rt:   # if the sensor is the one corresponding to the ox I'll do the ox check
+        if (name == "room temperature"):
             # check the value recevied in the method emergencyHealthCheck
             print(f'{name}: {round(value,2)} {unit} at {time.strftime("%D %H:%M", time.localtime(int(timestamp)))}.')
             response_topic, response = self.EmergencyRTCheck(topic, msg)
@@ -84,7 +78,6 @@ class BT_Controller:
                 print("warning topic: {}".format(response_topic))    
                 print(f'{name}: {round(value,2)} {unit} at {time.strftime("%D %H:%M", time.localtime(int(timestamp)))}.') 
                 self.client.myPublish(response_topic, response)
-                # there are some issues so we need to adjust something int the room
                 self.RoomAdjust(topic, response)
             
     def RoomAdjust(self,topic,response):
@@ -94,7 +87,7 @@ class BT_Controller:
     def window_adjust(self,topic, response):
         name = response['e']['n'] 
         
-        if name == "Warning/Fever" or name == "Warning/High Fever":
+        if name == "Warning/Hot Room":
             payload = self.__message.copy()
             payload['e']['n'] = "window"
             payload['e']['v'] = 0              # Open
@@ -102,7 +95,7 @@ class BT_Controller:
             self.client.myPublish(topic+"/Window", payload)
             print("Window Opened")
             
-        if name == "Warning/Hypothermia":
+        if name == "Warning/Cold Room":
             payload = self.__message.copy()
             payload['e']['n'] = "window"
             payload['e']['v'] = 1              # Closed
@@ -113,7 +106,7 @@ class BT_Controller:
     def heating_adjust(self,topic, response):
         name = response['e']['n'] 
         
-        if name == "Warning/Hypothermia":
+        if name == "Warning/Cold Room":
             payload = self.__message.copy()
             payload['e']['n'] = "heating"
             payload['e']['v'] = 0              # On
@@ -121,7 +114,7 @@ class BT_Controller:
             self.client.myPublish(topic+"/Heating", payload)
             print("Central heating switched on")
             
-        if name == "Warning/Fever" or name == "Warning/High Fever":
+        if name == "Warning/Hot Room":
             payload = self.__message.copy()
             payload['e']['n'] = "heating"
             payload['e']['v'] = 1              # Off
@@ -132,12 +125,13 @@ class BT_Controller:
 if __name__ == '__main__': 
     conf=json.load(open("settings.json"))  
     catalogIP = conf["catalog_address"]
-    broker = requests.get(catalogIP+'/broker').text
-    port = int(requests.get(catalogIP+'/port').text)
-    baseTopic = requests.get(catalogIP+'/base_topic').text
+    broker =  conf["broker"]
+    port =  conf["port"]
+    baseTopic =  conf["baseTopic"]
     token = requests.get(catalogIP+'/token').text
     topic = baseTopic + "/#" 
-    BT_Control = BT_Controller("PatientMonitoring_BT_Controller",topic,broker,port) 
+    
+    BT_Control = BT_Controller("PM_RT_Controller",topic,broker,port) 
     BT_Control.run() 
 
     while True: 

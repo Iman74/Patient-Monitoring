@@ -3,7 +3,7 @@ import time
 import json
 import requests
 
-class Window:
+class CentralHeating:
     def __init__(self, clientID, topic,broker,port):
         self.client=MyMQTT(clientID,broker,port,self)
         self.topic=topic
@@ -22,19 +22,19 @@ class Window:
         timestamp=d['e']['t']
         
         if self.status == 0:
-            print(f'The window has been opened at time {time.strftime("%D %H:%M", time.localtime(int(timestamp)))}')
+            print(f'The central heating has been switched on {time.strftime("%D %H:%M", time.localtime(int(timestamp)))}')
         if self.status == 1:
-            print(f'The window has been closed at time {time.strftime("%D %H:%M", time.localtime(int(timestamp)))}')
+            print(f'The central heating has been switched off {time.strftime("%D %H:%M", time.localtime(int(timestamp)))}')
 
 if __name__ == "__main__":
     conf = json.load(open("settings.json"))
     catalogIP = conf["catalog_address"]
-    broker = requests.get(catalogIP+'/broker').text
-    port = int(requests.get(catalogIP+'/port').text)
-    baseTopic = requests.get(catalogIP+'/base_topic').text
+    broker =  conf["broker"]
+    port =  conf["port"]
+    baseTopic =  conf["baseTopic"]
     
-    topic = baseTopic + "/+/+/Window"
-    test = Window("PM_monitoring_window",topic,broker,port)
+    topic = baseTopic + "/+/+/Heating"
+    test = CentralHeating("PM_monitoring_heating",topic,broker,port)
     test.start()
     
     while True:

@@ -1,148 +1,18 @@
-
 import cherrypy
 import requests
 import json
-import os
 import time
 
-def get_address():
-	conf = json.load(open("settings.json"))
-	addressCatalog = conf["catalog_address"]
-	return addressCatalog
-
-class WebPage:
-	def __init__(self):
-		pass
-		
-	# WebPage paths
-	@cherrypy.expose
-	def index(self):
-		return open("template/homepage.html").read()				# Homepage
-	@cherrypy.expose
-	def admin_index(self):
-		return open("template/admin_index.html").read()				# list of possible operations for admin
-	@cherrypy.expose
-	def patient_index(self):
-		return open("template/patient_index.html").read() 			# list of possible operations for patients
-	@cherrypy.expose
-	def doctor_index(self):
-		return open("template/doctor_index.html").read()			# list of possible operations for doctors
-	@cherrypy.expose
-	def admin_login(self):
-		return open("template/admin_login.html").read()				# login as admin
-	@cherrypy.expose
-	def patient_login(self):
-		return open("template/patient_login.html").read()			# login as patient
-	@cherrypy.expose
-	def doctor_login(self):
-		return open("template/doctor_login.html").read()			# login as doctor
-	@cherrypy.expose
-	def d_doctor_update(self):
-		return open("template/d_doctor_update.html").read() 		# update personal data when logged as doctor
-	@cherrypy.expose
-	def d_doctor_view(self):
-		return open("template/d_doctor_view.html").read()  			# view personal data of doctor logged
-	@cherrypy.expose
-	def d_patient_registration(self):
-		return open("template/d_patient_registration.html").read()  # register a patient for doctor logged
-	@cherrypy.expose
-	def d_patients_view(self):
-		return open("template/d_patients_view.html").read()			# view all patients of doctor logged
-	@cherrypy.expose
-	def p_device_registration(self):
-		return open("template/p_device_registration.html").read()   # register a device for patient logged
-	@cherrypy.expose
-	def p_devices_view(self):
-		return open("template/p_devices_view.html").read()			# view all devices of patient logged
-	@cherrypy.expose
-	def p_patient_update(self):
-		return open("template/p_patient_update.html").read()	    # update personal data when logged as patient
-	@cherrypy.expose
-	def p_patient_view(self):
-		return open("template/p_patient_view.html").read()			# view personal data of patient logged
-	@cherrypy.expose
-	def view(self):
-		return open("template/view.html").read()					# possible view operations as admin
-	@cherrypy.expose
-	def patient(self):
-		return open("template/patient_view.html").read()			# view info of a specific patient
-	@cherrypy.expose
-	def all_patients(self):
-		return open("template/all_patients.html").read()			# view all patients in the catalog
-	@cherrypy.expose
-	def doctor(self):
-		return open("template/doctor_view.html").read()				# view info of a specific doctor
-	@cherrypy.expose
-	def all_doctors(self):
-		return open("template/all_doctors.html").read()				# view all doctors in the catalog
-	@cherrypy.expose
-	def device(self):
-		return open("template/device_view.html").read()				# view info of a specific device
-	@cherrypy.expose
-	def all_devices(self):
-		return open("template/all_devices.html").read()				# view all devices in the catalog
-	@cherrypy.expose
-	def service(self):
-		return open("template/service_view.html").read()			# view info of a specific microservice
-	@cherrypy.expose
-	def all_services(self):
-		return open("template/all_services.html").read()			# view all microservices in the catalog
-	@cherrypy.expose
-	def registration(self):
-		return open("template/register.html").read()				# possible register operations as admin
-	@cherrypy.expose
-	def update(self):
-		return open("template/update.html").read()					# possible update operations as admin
-	@cherrypy.expose
-	def delete(self):
-		return open("template/delete.html").read()					# possible delete operations as admin
-	@cherrypy.expose
-	def patient_registration(self):
-		return open("template/patient_registration.html").read()	# register a patient
-	@cherrypy.expose
-	def doctor_registration(self):
-		return open("template/doctor_registration.html").read()		# register a doctor
-	@cherrypy.expose
-	def device_registration(self):
-		return open("template/device_registration.html").read()		# register a device
-	@cherrypy.expose
-	def service_registration(self):
-		return open("template/service_registration.html").read()	# register a microservice
-	@cherrypy.expose
-	def patient_update(self):
-		return open("template/patient_update.html").read()			# update a patient
-	@cherrypy.expose
-	def doctor_update(self):
-		return open("template/doctor_update.html").read()			# update a doctor
-	@cherrypy.expose
-	def device_update(self):
-		return open("template/device_update.html").read()			# update a device
-	@cherrypy.expose
-	def service_update(self):
-		return open("template/service_update.html").read()			# update a microservice
-	@cherrypy.expose
-	def doctor_delete(self):
-		return open("template/doctor_delete.html").read()			# delete a doctors
-	@cherrypy.expose
-	def patient_delete(self):
-		return open("template/user_delete.html").read()				# delete a patient
-	@cherrypy.expose
-	def device_delete(self):
-		return open("template/device_delete.html").read()			# delete a device
-	@cherrypy.expose
-	def service_delete(self):
-		return open("template/service_delete.html").read()			# delete a microservice
-	
 class RestAPI(object):
 	exposed = True
 	def __init__(self):
 		self.filename = "Catalog.json"
 		self.file=json.load(open(self.filename, encoding="utf-8"))
 		self.settings = json.load(open("settings.json", encoding="utf-8"))
-		self.file["broker"] = self.settings["broker"]
-		self.file["port"] = self.settings["port"]
+		# self.file["broker"] = self.settings["broker"]
+		# self.file["port"] = self.settings["port"]
+		# self.file["baseTopic"] = self.settings["baseTopic"]
 		self.file["telegramToken"] = self.settings["telegramToken"]
-		self.file["baseTopic"] = self.settings["baseTopic"]
 		self.file["admin"] = self.settings["admin"]
 		json.dump(self.file,open(self.filename,"w"),indent=4)
 
@@ -254,18 +124,18 @@ class RestAPI(object):
 				if founded != True:
 					return "Microservice not founded"
 
-			elif str(uri[0]) =='broker':
-				broker = self.file['broker']
-				return broker
-			elif str(uri[0]) =='port':
-				port = self.file['port']
-				return str(port)
+			# elif str(uri[0]) =='broker':
+			# 	broker = self.file['broker']
+			# 	return broker
+			# elif str(uri[0]) =='port':
+			# 	port = self.file['port']
+			# 	return str(port)
 			elif str(uri[0]) == 'token':
 				token = self.file['telegramToken']
 				return str(token)
-			elif str(uri[0]) == 'base_topic':
-				topic = self.file['baseTopic']
-				return str(topic)
+			# elif str(uri[0]) == 'base_topic':
+			# 	topic = self.file['baseTopic']
+			# 	return str(topic)
 			elif str(uri[0])=="admin":
 				return json.dumps(self.file["admin"])
 			else:
@@ -540,55 +410,15 @@ class RestAPI(object):
 				patients["patients"].append(self.file["doctorsList"][doctor]["patientsList"][patient])
 		return patients
 
-# Removes all the devices with timestamp higher than two minutes. 
-def deleteOld(addressCatalog):
-	doctors = requests.get(addressCatalog+"/doctors")
-	doctors = doctors.json()
-	for doctor in range(len(doctors['doctors'])):
-		for patient in range(len(doctors['doctors'][doctor]["patientsList"])):
-			devices = doctors['doctors'][doctor]["patientsList"][patient]["devicesList"]
-			for device in range(len(devices)):
-				if int(time.mktime(time.strptime(devices[device]['lastUpdate'],"%d-%m-%Y %H:%M:%S"))) + 60*2 < time.time():
-					requests.delete(addressCatalog+'/device/'+str(devices[device]['deviceID']))
-				else:
-					pass	
-
-if __name__=="__main__":
-	addressCatalog = get_address()
-	conf={
-		'/':{
-	 		'request.dispatch':cherrypy.dispatch.MethodDispatcher(),  
- 	 		'tools.sessions.on':True
-	 	},
-	 	'global':{
-	 		'request.dispatch':cherrypy.dispatch.MethodDispatcher(),  
- 	 		'tools.sessions.on':True   
-	 	}
-       }
-	cherrypy.config.update({'server.socket_port':9090})
-	cherrypy.config.update({'global':{
-	 		'request.dispatch':cherrypy.dispatch.MethodDispatcher(),  
- 	 		'tools.sessions.on':True   
-	 	}})
-	try:
-		cherrypy.tree.mount(WebPage(),'/',{		"/img": {"tools.staticdir.on": True,
-				"tools.staticdir.dir": os.path.join(os.path.dirname(os.path.abspath(__file__)), "img")},
-		"/css": {"tools.staticdir.on": True,
-              	"tools.staticdir.dir": os.path.join(os.path.dirname(os.path.abspath(__file__)), "css")},
-       '/style.css':
-                    { 'tools.staticfile.on':True,
-                      'tools.staticfile.filename': os.path.abspath("./css/style.css")
-                    } })
-		cherrypy.tree.mount(RestAPI(),'/api',{'/':{
-	 		'request.dispatch':cherrypy.dispatch.MethodDispatcher(),  
- 	 		'tools.sessions.on':True
-	 	}})
-		
-		cherrypy.engine.start()
-		while True:
-			time.sleep(60)
-			# deleteOld(addressCatalog)        # sono io (sara) ad averlo commentato perchè mentre faccio le prove sul bot mi sa che cancella i sensori
-		cherrypy.engine.block()
-	except KeyboardInterrupt:
-		print("Stopping the engine")
-		exit()
+	# Removes all the devices with timestamp higher than two minutes. 
+	def deleteOld(self,addressCatalog):
+		doctors = requests.get(addressCatalog+"/doctors")
+		doctors = doctors.json()
+		for doctor in range(len(doctors['doctors'])):
+			for patient in range(len(doctors['doctors'][doctor]["patientsList"])):
+				devices = doctors['doctors'][doctor]["patientsList"][patient]["devicesList"]
+				for device in range(len(devices)):
+					if int(time.mktime(time.strptime(devices[device]['lastUpdate'],"%d-%m-%Y %H:%M:%S"))) + 60*2 < time.time():
+						requests.delete(addressCatalog+'/device/'+str(devices[device]['deviceID']))
+					else:
+						pass	

@@ -300,9 +300,9 @@ class Publisher:
 if __name__ == "__main__":
     conf = json.load(open("settings.json"))
     addressCatalog = conf["catalog_address"]
-    broker = requests.get(addressCatalog+'/broker').text
-    port = int(requests.get(addressCatalog+'/port').text)
-    baseTopic = requests.get(addressCatalog+'/base_topic').text
+    broker =  conf["broker"]
+    port =  conf["port"]
+    baseTopic =  conf["baseTopic"]
 
     sensorID_o = "s_"+"0x01"
     sensorID_rT = "s_"+"0x02"

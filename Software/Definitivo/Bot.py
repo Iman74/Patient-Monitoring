@@ -9,7 +9,6 @@ from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardButton, InlineKeyboardMarkup
 
 from MyMQTT import *
-from imgkitTS import *
 
 class PatientMonitoringBOT:
     def __init__(self,token, catalogIP, clientID, broker, port, baseTopic):
@@ -369,11 +368,10 @@ class PatientMonitoringBOT:
     
 if __name__ == '__main__':
     conf = json.load(open("settings.json"))
-    conf = json.load(open("settings.json"))
     catalogIP = conf["catalog_address"]
-    broker = requests.get(catalogIP+'/broker').text
-    port = int(requests.get(catalogIP+'/port').text)
-    baseTopic = requests.get(catalogIP+'/base_topic').text
+    broker =  conf["broker"]
+    port =  conf["port"]
+    baseTopic =  conf["baseTopic"]
     token = conf["telegramToken"]
     clientID = "PatientMonitoring_22"
     

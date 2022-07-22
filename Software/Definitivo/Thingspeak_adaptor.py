@@ -7,13 +7,6 @@ from datetime import datetime
 import time
 
 
-def get_broker(catalog_url):
-	#get message broker, port and baseTopic from Catalog
-	broker = requests.get(catalog_url+'/broker').text
-	port = int(requests.get(catalog_url+'/port').text)
-	baseTopic = requests.get(catalog_url+'/base_topic').text
-	return (broker, port, baseTopic)
-	
 
 #REST client to obtain data from the Catalog
 class GetData_From_Catalog:
@@ -137,12 +130,12 @@ class ThingSpeak_subscriber:
 				#self.payload['updates'].update({self.fieldname : self.value})
 			self.payload['updates'].append(msg)
 
-	def save_data(self):
+	def save_data(self,w_api):
 		database=self.payload
 		# check for the same timestamp  and put values with the same timestamp together:
 		database['updates'] = self.refine_payload(database['updates'])
 		self.payload={
-		"write_api_key": "434C95BEI6UMSS6D",
+		"write_api_key": w_api,
 			"updates": []
 			}
 		ch_id = "1718792"
@@ -187,14 +180,18 @@ class ThingSpeak_subscriber:
 
 
 if __name__ == "__main__":
-	conf = json.load(open("thingspeak_settings.json"))
-	g_conf = json.load(open("settings.json"))
+	# conf = json.load(open("thingspeak_settings.json"))
+	conf = json.load(open("settings.json"))
 
-	QoS=conf["QoS"]
-	catalog_url=g_conf["catalog_address"]
-	broker, port, baseTopic=get_broker(catalog_url)
+	# QoS=conf["QoS"]
+	catalog_url=conf["catalog_address"]
+	w_api = conf["write_api_key"]
+    catalogIP = conf["catalog_address"]
+    broker =  conf["broker"]
+    port =  conf["port"]
+    baseTopic =  conf["baseTopic"]
 	
-	client=GetData_From_Catalog(catalog_url, baseTopic)
+	client=GetData_From_Catalog(catalogIP, baseTopic)
 	client.get_patients()
 	client.get_devices()
 	client.get_topics_ID()
@@ -203,6 +200,6 @@ if __name__ == "__main__":
 	TS_sub=ThingSpeak_subscriber(topic,'TS'+str(1234), broker, port)
 	TS_sub.run()
 	while True:
-		print(TS_sub.save_data())
+		print(TS_sub.save_data(w_api))
 		time.sleep(15)
 	TS_sub.end()
