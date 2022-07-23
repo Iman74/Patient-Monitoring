@@ -21,7 +21,7 @@ class PatientMonitoringBOT:
         #Subscriber    
         self.port = port
         self.baseTopic = baseTopic
-        self.topic = baseTopic + "/+/+/Warning"        # self.topic deve essere "basetopic/#/Warning"
+        self.topic = baseTopic + "/+/+/Warning"    
         self.clientID = clientID
         self.client = MyMQTT(clientID,broker,port,self)
         
@@ -45,14 +45,6 @@ class PatientMonitoringBOT:
                             [InlineKeyboardButton(text='Body Temperature - last 2 h', callback_data='/BT2')],
                             [InlineKeyboardButton(text='Enable Notifications', callback_data='/Notifications')]
                         ])
-        # self.keyboardD2 = InlineKeyboardMarkup(inline_keyboard=[
-        #                     [InlineKeyboardButton(text='Heart Rate trend - last 2 h', callback_data='/HR2')],
-        #                     [InlineKeyboardButton(text='Heart Rate trend - last 24 h', callback_data='/HR24')],
-        #                     [InlineKeyboardButton(text='Oxygenation trend - last 2 h', callback_data='/OX2')],
-        #                     [InlineKeyboardButton(text='Oxygenation trend - last 24 h', callback_data='/OX24')],
-        #                     [InlineKeyboardButton(text='Body Temperature - last 2 h', callback_data='/BT2')],
-        #                     [InlineKeyboardButton(text='Body Temperature - last 24 h', callback_data='/BT24')]
-        #                 ])
         self.keyboard_notify = InlineKeyboardMarkup(inline_keyboard=[
                                 [InlineKeyboardButton(text='Stop notifications', callback_data='/StopNotifications')]
                             ])
@@ -60,13 +52,12 @@ class PatientMonitoringBOT:
         self.data={}
         self.s={}
         
-    def start(self):  #I think that I need a start to continue from the previous query
+    def start(self):  
       
         MessageLoop(self.bot, {'chat': self.on_chat_message, 'callback_query': self.on_callback_query}).run_as_thread()
         print('Listening...')
         
     def start_mysub(self):
-        # #parte il subscriber
         self.client.start()
         print('{} has started'.format(self.clientID))
         self.client.mySubscribe(self.topic)
@@ -87,7 +78,7 @@ class PatientMonitoringBOT:
             welcome = ("Welcome to the PatientMonitoring Bot 👩‍⚕️🩺" + "\nPlease chose an option from the menu below")               
             self.bot.sendMessage(chat_ID, text=welcome , reply_markup=self.keyboard)
             
-        elif message == '/login':          # mi permette di fare il login anche se non clicco il pusante
+        elif message == '/login':         
             self.data = self.store_data(chat_ID, message)
             
         elif 'user' in list(self.data.keys()):      
@@ -136,7 +127,6 @@ class PatientMonitoringBOT:
     def get_listofpatients(self, chat_ID):
         r = requests.get(self.catalog+'/patients_doc/{}'.format(self.data['user']['/login']['userID']))   # I retrieve the list of patients             
         patients= r.json()
-        # torna qui
         if patients:    
             self.bot.sendMessage(chat_ID, text='These are your patients:')    
             patients_IDs = []
@@ -153,7 +143,7 @@ class PatientMonitoringBOT:
     def thingspeak_plot(self, chat_ID, field):
         conf = json.load(open("settings.json"))
         chID = conf["thingspeak_chID"]
-        n_samples='480'                 # per il trend di 2 h servono 4x60x2 = 480 
+        n_samples='480'               
         p={'api_key': conf["read_api_key"],'results':n_samples}
         r= requests.get('https://api.thingspeak.com/channels/'+str(chID)+'/fields/'+str(field)+'.json?',params=p)
         
@@ -195,17 +185,17 @@ class PatientMonitoringBOT:
         self.data['user'][query_data]['userID']=None
         self.data['user'][query_data]['password']=None
         self.data['user'][query_data]['user_type']=None
-        self.data['user'][query_data]['patient_IDs']=None        # qui memorizzo la lista degli ID dei pazienti del dottore che sta usando il bot
-        self.data['user'][query_data]['patient_ID']=None     # qui memorizzo l'ID del paziente di cui si vogliono vedere i trend   
+        self.data['user'][query_data]['patient_IDs']=None      
+        self.data['user'][query_data]['patient_ID']=None       
         self.bot.sendMessage(chat_ID, text='Insert your userID:')  
         return self.data
     
-    # # REGISTRATION ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # REGISTRATION ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def registration(self, msg, chat_ID):
         action = '/register'
         if self.data['user'][action]['userID']==None and self.data['user'][action]['password']==None:
             # Store the userID 
-            self.data['user'][action]['userID'] = msg['text']       # this will return a string
+            self.data['user'][action]['userID'] = msg['text']     
             # retreive the info of the user with user_ID
             is_doctor, is_patient, user_dict, r = self.user_info(chat_ID, self.data['user'][action]['userID'], action)                   
             # Check if the userID is already registered                     
@@ -216,8 +206,7 @@ class PatientMonitoringBOT:
                 self.bot.sendMessage(chat_ID, text='Choose a password:')
                 
         elif self.data['user'][action]["userID"]!=None and self.data['user'][action]["password"]==None:
-            self.data['user'][action]["password"]=msg['text']
-            user_ID = int(self.data['user'][action]['userID'])      # DUBBIO: TENERE USER_ID O METTERE DITETTAMENTE L'INFO IN SELF.DATA? 
+            self.data['user'][action]["password"]=msg['text'] 
             # Retreive the user_dict to update
             is_doctor, is_patient, user_dict, r = self.user_info(chat_ID, self.data['user'][action]['userID'], action)   
             # update user_dict with pw and chat_ID; I'll put this dictionary inside the catalog without taking risk of overwriting the wrong user                            
@@ -239,8 +228,7 @@ class PatientMonitoringBOT:
         
         if self.data['user'][action]['userID']==None and self.data['user'][action]['password']==None:
             # Store the userID 
-            self.data['user'][action]['userID'] = msg['text']     # this will return a string
-            # print("username inserted: {}".format(self.data['user'][action]['userID'])) 
+            self.data['user'][action]['userID'] = msg['text']     
             self.bot.sendMessage(chat_ID, text='Insert your password:')
             
         elif self.data['user']['/login']['userID']!=None and self.data['user']['/login']['password']==None: 
@@ -252,9 +240,6 @@ class PatientMonitoringBOT:
                 r = requests.get(self.catalog+'/doctor/'+ str(self.data['user']['/login']['userID']))   # I retrieve the info of a specific doctor
                 user_dict = r.json()
                 if str(user_dict["password"]) == self.data['user']['/login']['password']:
-                    # self.data['user'] = chat_ID
-                    #presentare la keyboard con le opzioni per il dottore
-                    # print(self.data)
                     regMessage = ("Welcome back Dr. {} 👋💉💊\nThese are the features you can use, to continue select one of them")              
                     self.bot.sendMessage(chat_ID, text=regMessage.format(user_dict["name"]), reply_markup=self.keyboardD)
                     print("Log in was successful")  
@@ -265,8 +250,6 @@ class PatientMonitoringBOT:
                 r = requests.get(self.catalog+'/patient/'+ str(self.data['user']['/login']['userID']))   # I retrieve the info of a specific doctor
                 user_dict = r.json()
                 if self.data['user']['/login']['password']== str(user_dict["password"]) :
-                    # self.data['user'] = chat_ID
-                    #presentare la keyboard con le opzioni per il paziente
                     regMessage = ("Welcome {} 👋 \nThese are the features you can use, to continue select one of them")              
                     self.bot.sendMessage(chat_ID, text=regMessage.format(user_dict["name"]), reply_markup=self.keyboardP)
                     print("Log in was successful")  
@@ -276,7 +259,6 @@ class PatientMonitoringBOT:
             if is_doctor == False and is_patient == False :
                 error_msg = '⚠️ The userID inserted corresponds neither to a doctor nor to a patient, there\'s something wrong...'
                 self.bot.sendMessage(chat_ID, text=error_msg)  
-            # del self.data['user'][action]       # andare a vedere
                           
     # RETREIVE INFO ABOUT THE USER ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def user_info(self, chat_ID, user_ID, action):
@@ -284,8 +266,7 @@ class PatientMonitoringBOT:
            - is a doctor or a patient?
            - the user_dict
            It also returns 'r' (GET request) that will be useful later in the catalog update"""
-        is_doctor = False
-        is_patient = False
+        is_doctor, is_patient = False, False
         r = requests.get(self.catalog+'/doctors')         # I retrieve the list of doctors 
         doctors = r.json()
         # Is a doctor?
@@ -320,11 +301,9 @@ class PatientMonitoringBOT:
             if r.status_code == 200:
                 if is_doctor:
                     regMessage = ("Welcome Dr. {}, your registration has been successful 🎉 \nThese are the features you can use, to continue select one of them")              
-                    # self.bot.sendMessage(chat_ID, text=regMessage.format(user_dict["name"]))
                     self.bot.sendMessage(chat_ID, text=regMessage.format(user_dict["name"]) , reply_markup=self.keyboardD)
                 if is_patient:
                     regMessage = ("Welcome {}, your registration has been successful 🎉 \nThese are the features you can use, to continue select one of them")
-                    # self.bot.sendMessage(chat_ID, text=regMessage.format(user_dict["name"]))
                     self.bot.sendMessage(chat_ID, text= regMessage.format(user_dict["name"]), reply_markup=self.keyboardP)
                 del user_dict
             else:
@@ -339,25 +318,7 @@ class PatientMonitoringBOT:
         chat_ID = self.chat_ID
         if chat_ID: 
             patient_ID = topic.split('/')[1]
-            if patient_ID == self.data['user']['/login']['patient_ID']:
-            # OPZIONE 1 ********************************************************************
-            # alert = msg['e']['n'].split('/')[-1]
-            # if alert == "Tachycardia" or alert == "Bradycardia":
-            #     alert = msg['e']['n'].split('/')[-1]
-            #     action = "contact your patient to make an appointment for a visit."
-            #     tosend = f"ATTENTION!\n{alert} detected, you sholud {action}"
-            #     self.bot.sendMessage(chat_ID, text=tosend)  #commentato per test
-            # elif alert == "Warning/Hypoxia":
-            #     alert = alert.split('/')[-1]
-            #     action = "contact your patient as soon as possible."
-            #     tosend = f"ATTENTION!\n{alert} detected, you sholud {action}"
-                
-            # elif alert == "Fever" or  alert == "High Fever" or alert == "Hypothermia":
-            #     alert = msg['e']['n'].split('/')[-1]
-            #     action = "contact your patient as soon as possible."
-            #     tosend = f"ATTENTION!\n{alert} detected, you sholud {action}" 
-            #     self.bot.sendMessage(chat_ID, text=tosend)
-            # OPZIONE 2 ********************************************************************  
+            if patient_ID == self.data['user']['/login']['patient_ID']: 
                 self.SendAlert(msg,chat_ID)
     
     def SendAlert(self, msg, chat_ID):
