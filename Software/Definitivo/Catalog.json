@@ -1,5 +1,5 @@
 {
-    "lastUpdate": "23-07-2022 21:30:02",
+    "lastUpdate": "24-07-2022 12:20:51",
     "doctorsList": [
         {
             "name": "Sheldon Cooper",
@@ -30,7 +30,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "23-07-2022 21:30:02"
+                            "lastUpdate": "24-07-2022 12:20:51"
                         },
                         {
                             "deviceID": "s_0x02",
@@ -46,7 +46,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "23-07-2022 21:30:02"
+                            "lastUpdate": "24-07-2022 12:20:51"
                         },
                         {
                             "deviceID": "s_0x03",
@@ -62,7 +62,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "23-07-2022 21:30:02"
+                            "lastUpdate": "24-07-2022 12:20:51"
                         },
                         {
                             "deviceID": "s_0x04",
@@ -78,7 +78,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "23-07-2022 21:30:02"
+                            "lastUpdate": "24-07-2022 12:20:51"
                         }
                     ],
                     "lastUpdate": "23-07-2022 18:50:16"
@@ -103,26 +103,11 @@
                     "thingspeak_rkey": "",
                     "thingspeak_wkey": "",
                     "devicesList": []
-                }
-            ]
-        },
-        {
-            "name": "John Watson",
-            "userID": "777",
-            "password": "ok",
-            "telegramID": "789",
-            "patientsList": []
-        },
-        {
-            "name": "Doctor X",
-            "userID": "doc1",
-            "password": "123",
-            "telegramID": "",
-            "patientsList": [
+                },
                 {
-                    "name": "silvi",
+                    "name": "Silvia Polizzi",
                     "userID": "1999",
-                    "password": "admin",
+                    "password": "123456",
                     "telegramID": "",
                     "thingspeak_chID": "0",
                     "thingspeak_rkey": "0",
@@ -130,6 +115,20 @@
                     "devicesList": []
                 }
             ]
+        },
+        {
+            "name": "Doctor House",
+            "userID": "777",
+            "password": "ok",
+            "telegramID": "789",
+            "patientsList": []
+        },
+        {
+            "name": "Doctor Hibbert",
+            "userID": "doc1",
+            "password": "123",
+            "telegramID": "",
+            "patientsList": []
         }
     ],
     "microservices": [

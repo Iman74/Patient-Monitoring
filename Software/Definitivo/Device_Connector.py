@@ -126,7 +126,7 @@ def RoomTempratureSensor(range_,sensorID,broker):
 
 def OxygenSensor(range_,sensorID,broker):
     info_sensor = {
-                "deviceID": sensorID,  "s_"+"0x01"
+                "deviceID": sensorID, 
                 "deviceName": "SensorO",
                 "measureType": "heartrate",
                 "availableServices": "MQTT",

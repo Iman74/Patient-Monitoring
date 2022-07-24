@@ -34,7 +34,8 @@
                         method: "DELETE",
                         url: myurl,
                         complete: function (r) {
-                            alert(r.responseText)
+                            alert(r.responseText);
+                            location.reload(); 
                         },
                     });
                 }

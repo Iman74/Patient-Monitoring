@@ -34,7 +34,6 @@ class BT_Controller:
         value = message['e']['v'] 
         
         is_response = False   
-        # if (name == "oxygen"):        # non ci dovrebbe essere bisogno di queste condizioni perchè controllo il sensore prima di fare l'healthcheck
         if value>= 35.6 and value<= 37.4:
             # do nothing - Normal Body Temperature
             pass

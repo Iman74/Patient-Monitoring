@@ -114,7 +114,7 @@ class WebPage:
 		return open("template/doctor_delete.html").read()			# delete a doctors
 	@cherrypy.expose
 	def patient_delete(self):
-		return open("template/user_delete.html").read()				# delete a patient
+		return open("template/patient_delete.html").read()				# delete a patient
 	@cherrypy.expose
 	def device_delete(self):
 		return open("template/device_delete.html").read()			# delete a device
