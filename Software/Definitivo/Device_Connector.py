@@ -162,7 +162,7 @@ def OxygenSensor(range_,sensorID,broker):
             message['e']['v'] = round(random.uniform(85,94), 0) 
             message['e']['t'] = time.time() 
         elif range_ == "acute_respiratory_failure": 
-            message['e']['v'] = round(random.uniform(50, 84), 0)   #don't know if the minimum should be changed!!
+            message['e']['v'] = round(random.uniform(50, 84), 0)   
             message['e']['t'] = time.time() 
         return message
     else:

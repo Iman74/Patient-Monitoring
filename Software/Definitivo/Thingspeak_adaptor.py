@@ -74,14 +74,14 @@ class GetData_From_Catalog:
 #MQTT subscriber to obtain sensors' data
 class ThingSpeak_subscriber:
 
-	def __init__(self,topic,clientID,broker,port):
+	def __init__(self,topic,clientID,broker,port,w_api):
 		self.clientID=clientID
 		self.topic=topic
 		self.client=MyMQTT(clientID,broker,port,self)
 		self.fieldname=""
 		self.value=""
 		self.payload = {
-		"write_api_key": "434C95BEI6UMSS6D",
+		"write_api_key": w_api,
 			"updates": []
 			}
 
@@ -130,7 +130,7 @@ class ThingSpeak_subscriber:
 				#self.payload['updates'].update({self.fieldname : self.value})
 			self.payload['updates'].append(msg)
 
-	def save_data(self,w_api):
+	def save_data(self,ch_id,w_api):
 		database=self.payload
 		# check for the same timestamp  and put values with the same timestamp together:
 		database['updates'] = self.refine_payload(database['updates'])
@@ -138,7 +138,7 @@ class ThingSpeak_subscriber:
 		"write_api_key": w_api,
 			"updates": []
 			}
-		ch_id = "1718792"
+		
 		url = "https://api.thingspeak.com/channels/"+str(ch_id)+"/bulk_update.json"
 		headers = {
 	  			'Content-Type': 'application/json'
@@ -185,6 +185,7 @@ if __name__ == "__main__":
 
 	# QoS=conf["QoS"]
 	w_api = conf["write_api_key"]
+	ch_id = conf["thingspeak_chID"]
 	catalogIP = conf["catalog_address"]
 	broker =  conf["broker"]
 	port =  conf["port"]
@@ -196,9 +197,9 @@ if __name__ == "__main__":
 	client.get_topics_ID()
 	topic=client.gen_topics()
 
-	TS_sub=ThingSpeak_subscriber(topic,'TS'+str(1234), broker, port)
+	TS_sub=ThingSpeak_subscriber(topic,'TS'+str(1234), broker, port,w_api)
 	TS_sub.run()
 	while True:
-		print(TS_sub.save_data(w_api))
+		print(TS_sub.save_data(ch_id,w_api))
 		time.sleep(15)
 	TS_sub.end()
