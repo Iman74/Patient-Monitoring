@@ -13,19 +13,16 @@ def find_me(deviceID):
     patients = requests.get(addressCatalog+'/patients')
     patients = patients.json()
     patients = patients['patients']
-    patientID = None
     for patient in range(len(patients)):
         try:
             for device in range(len(patients[patient]["devicesList"])):
-                if str(deviceID) == str(patients[patient]["devicesList"][device]['deviceID']):
-                   patientID = patients[patient]['userID']
-                   founded = True
-                   return str(patientID)
-                   raise StopIteration
+                if str(deviceID) == str(patients[patient]["devicesList"][device]["deviceID"]):
+                    patientID = patients[patient]['userID']
+                    founded = True
+                    return str(patientID)
+                    raise StopIteration
         except StopIteration:
             break
-
-    return patientID
 
 def update_me(deviceID,info_sensor):
     settings = json.load(open("settings.json", encoding="utf-8"))
@@ -35,13 +32,6 @@ def update_me(deviceID,info_sensor):
     r = requests.put(addressCatalog+"/device", json=payload)
     # update to stay "alive" in the catalog and update the timestamp
 
-def register_me(patinetID,info_sensor):
-    settings = json.load(open("settings.json", encoding="utf-8"))
-    addressCatalog = settings["catalog_address"]
-    #payload = json.dumps(info_sensor)
-    payload = info_sensor
-    r = requests.post(addressCatalog+"/device/"+patinetID, json=payload)
-    # update to stay "alive" in the catalog and update the timestamp
 
 def HeartRateSensor(range_,sensorID,broker):
     info_sensor = {
@@ -59,9 +49,6 @@ def HeartRateSensor(range_,sensorID,broker):
                             "lastUpdate": ""
                 }
     patientID = find_me(sensorID)
-    if  patientID is None:
-        register_me("2",info_sensor) #Registre temp for first time
-        patientID = find_me(sensorID)
     update_me(sensorID,info_sensor)
     # check if patientID has been acquired correctly
     if patientID:
@@ -107,8 +94,6 @@ def RoomTempratureSensor(range_,sensorID,broker):
                             "lastUpdate": ""
                 }
     patientID = find_me(sensorID)
-    if  patientID is None:
-        register_me("1",info_sensor) #Registre temp for first time
     update_me(sensorID,info_sensor)
     # check if patientID has been acquired correctly
     if patientID:
@@ -141,7 +126,7 @@ def RoomTempratureSensor(range_,sensorID,broker):
 
 def OxygenSensor(range_,sensorID,broker):
     info_sensor = {
-                "deviceID": sensorID,
+                "deviceID": sensorID,  "s_"+"0x01"
                 "deviceName": "SensorO",
                 "measureType": "heartrate",
                 "availableServices": "MQTT",
@@ -155,8 +140,6 @@ def OxygenSensor(range_,sensorID,broker):
                             "lastUpdate": ""
                 }
     patientID = find_me(sensorID)
-    if  patientID is None:
-        register_me("1",info_sensor) #Registre temp for first time
     update_me(sensorID,info_sensor)
     # check if patientID has been acquired correctly
     if patientID:
@@ -200,8 +183,6 @@ def BodyTempratureSensor(range_,sensorID,broker):
                             "lastUpdate": ""
                 }
     patientID = find_me(sensorID)
-    if  patientID is None:
-        register_me("1",info_sensor) #Registre temp for first time
     update_me(sensorID,info_sensor)
     # check if patientID has been acquired correctly
     if patientID:

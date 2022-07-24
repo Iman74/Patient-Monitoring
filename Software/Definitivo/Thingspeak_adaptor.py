@@ -184,12 +184,11 @@ if __name__ == "__main__":
 	conf = json.load(open("settings.json"))
 
 	# QoS=conf["QoS"]
-	catalog_url=conf["catalog_address"]
 	w_api = conf["write_api_key"]
-    catalogIP = conf["catalog_address"]
-    broker =  conf["broker"]
-    port =  conf["port"]
-    baseTopic =  conf["baseTopic"]
+	catalogIP = conf["catalog_address"]
+	broker =  conf["broker"]
+	port =  conf["port"]
+	baseTopic =  conf["baseTopic"]
 	
 	client=GetData_From_Catalog(catalogIP, baseTopic)
 	client.get_patients()

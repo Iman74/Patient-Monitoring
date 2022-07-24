@@ -2,6 +2,7 @@ import cherrypy
 import json
 import time
 import os
+import requests
 from Catalog import RestAPI
 from WebManager import WebPage
 
@@ -9,6 +10,18 @@ def get_address():
 	conf = json.load(open("settings.json"))
 	addressCatalog = conf["catalog_address"]
 	return addressCatalog
+# Removes all the devices with timestamp higher than two minutes. 
+def deleteOld(addressCatalog):
+	doctors = requests.get(addressCatalog+"/doctors")
+	doctors = doctors.json()
+	for doctor in range(len(doctors['doctors'])):
+		for patient in range(len(doctors['doctors'][doctor]["patientsList"])):
+			devices = doctors['doctors'][doctor]["patientsList"][patient]["devicesList"]
+			for device in range(len(devices)):
+				if int(time.mktime(time.strptime(devices[device]['lastUpdate'],"%d-%m-%Y %H:%M:%S"))) + 60*2 < time.time():
+					requests.delete(addressCatalog+'/device/'+str(devices[device]['deviceID']))
+				else:
+					pass	
 
 if __name__=="__main__":
 	addressCatalog = get_address()
@@ -44,7 +57,7 @@ if __name__=="__main__":
 		cherrypy.engine.start()
 		while True:
 			time.sleep(60)
-			RestAPI.deleteOld(addressCatalog)
+			deleteOld(addressCatalog)
 		cherrypy.engine.block()
 	except KeyboardInterrupt:
 		print("Stopping the engine")

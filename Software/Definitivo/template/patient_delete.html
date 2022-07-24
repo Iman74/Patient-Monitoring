@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
-        <title>Patient Monitoring - Patient Deletion</title>
+        <title>iCare - Patient Deletion</title>
         <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
         <link rel="stylesheet" href="css/style.css" />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -14,7 +14,7 @@
 
     <body>
 
-        <h1 style="text-align: center;">Patient Monitoring - Patient Deletion</h1>
+        <h1 style="text-align: center;">iCare - Patient Deletion</h1>
         <div class="container">
             <p style="text-align: center;">
             <input type="button" onclick="document.location.href='/admin_index';" value="Index"><br></p>
@@ -35,6 +35,7 @@
                         url: myurl,
                         complete: function (r) {
                             alert(r.responseText)
+                            location.reload();
                         },
                     });
                 }

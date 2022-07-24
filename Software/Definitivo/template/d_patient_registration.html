@@ -3,16 +3,18 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
-        <title>Patient Monitoring - Patient Register</title>
+        <title>iCare - Patient Register</title>
         <link rel="shortcut icon" type="image/png" href="/img/healthcare.png">
         <link rel="stylesheet" href="css/style.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
 
 
     <body>
 
-        <h1 style="text-align: center;">Patient Monitoring - Patient Registration</h1>
+        <h1 style="text-align: center;">iCare - Patient Registration</h1>
         <div class="container">
             <p style="text-align: center;">
             <input type="button" onclick="document.location.href='/doctor_index';" value="Index"><br></p>
@@ -36,7 +38,7 @@
     </div>
     <script>
         function sendPOSTrequest() {
-            docID = sessionStorage.getItem('userID');
+            let docID = sessionStorage.getItem('userID');
             name = $("#name").val();
             userID = $("#userID").val();
             password = $("#password").val();
@@ -44,7 +46,7 @@
             thingspeak_chID = $("#thingspeak_chID").val();
             thingspeak_rkey = $("#thingspeak_rkey").val();
             thingspeak_wkey = $("#thingspeak_wkey").val();
-            devicesList = "";
+            devicesList = [];
             myurl = "/api/patient/"+docID; 
             $.ajax({
                 method: "POST",

@@ -155,7 +155,7 @@ class RestAPI(object):
 				for doctor in range(len(doctors)):
 					for patient in range(len(doctors[doctor]["patientsList"])):
 						for device in range(len(doctors[doctor]["patientsList"][patient]["devicesList"])):
-							if str(new['deviceID']) == str(doctors[doctor]["patientsList"][patient]["devicesList"][device]['deviceID']):
+							if str(new['deviceID']) == doctors[doctor]["patientsList"][patient]["devicesList"][device]['deviceID']:
 								doctors[doctor]["patientsList"][patient]["devicesList"][device] = new
 								self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
 								doctors[doctor]["patientsList"][patient]["devicesList"][device]["lastUpdate"] = time.strftime("%d-%m-%Y %H:%M:%S")
@@ -172,7 +172,7 @@ class RestAPI(object):
 				new = cherrypy.request.json
 				doctors = self.file["doctorsList"]
 				for doctor in range(len(doctors)):
-					if str(new['userID']) == str(doctors[doctor]['userID']):
+					if str(new['userID']) == doctors[doctor]['userID']:
 						doctors[doctor] = new
 						self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
 						json.dump(self.file,open(self.filename,"w"),indent=4)
@@ -189,7 +189,7 @@ class RestAPI(object):
 				doctors = self.file["doctorsList"]
 				for doctor in range(len(doctors)):
 					for patient in range(len(doctors[doctor]["patientsList"])):
-						if str(new['userID']) == str(doctors[doctor]["patientsList"][patient]['userID']):
+						if str(new['userID']) == doctors[doctor]["patientsList"][patient]['userID']:
 							doctors[doctor]["patientsList"][patient] = new
 							self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
 							json.dump(self.file,open(self.filename,"w"),indent=4)
@@ -206,7 +206,8 @@ class RestAPI(object):
 				new = {}
 				new = cherrypy.request.json
 				for service in range(len(services)):
-					if str(new['name']) == str(services[service]['name']):
+					service_name = services[service]['name']
+					if str(new['name']) == str(service_name):
 						services[service] = new
 						self.file['microservices'] = services
 						self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
@@ -235,15 +236,15 @@ class RestAPI(object):
 					doctors = self.file["doctorsList"]
 					for doctor in range(len(doctors)):
 						for patient in range(len(doctors[doctor]["patientsList"])):
-							if str(uri[1]) == str(doctors[doctor]["patientsList"][patient]["userID"]):
+							if str(uri[1]) == doctors[doctor]["patientsList"][patient]["userID"]:
 								for device in range(len(doctors[doctor]["patientsList"][patient]["devicesList"])):
-									if str(new['deviceID']) == str(doctors[doctor]["patientsList"][patient]["devicesList"][device]['deviceID']):
+									if str(new['deviceID']) == doctors[doctor]["patientsList"][patient]["devicesList"][device]['deviceID']:
 										founded = True
 										return "A device with this ID already exists."			
 					if founded != True:
 						for doctor in range(len(doctors)):
 							for patient in range(len(doctors[doctor]["patientsList"])):
-								if str(uri[1]) == str(doctors[doctor]["patientsList"][patient]["userID"]):
+								if str(uri[1]) == doctors[doctor]["patientsList"][patient]["userID"]:
 									doctors[doctor]["patientsList"][patient]["devicesList"].append(new)
 									self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
 									doctors[doctor]["patientsList"][patient]["devicesList"][device]['timestamp']=time.strftime("%d-%m-%Y %H:%M:%S")
@@ -260,7 +261,7 @@ class RestAPI(object):
 				new = cherrypy.request.json
 				doctors = self.file["doctorsList"]
 				for doctor in range(len(doctors)):
-					if str(new['userID']) == str(doctors[doctor]['userID']):
+					if str(new['userID']) == doctors[doctor]['userID']:
 						founded = True
 						return "A doctor with this ID already exists."
 				if founded != True:
@@ -277,15 +278,15 @@ class RestAPI(object):
 					new = cherrypy.request.json
 					doctors = self.file["doctorsList"]
 					for doctor in range(len(doctors)):
-						if str(uri[1]) == str(doctors[doctor]['userID']):
+						if str(uri[1]) == doctors[doctor]['userID']:
 							for patient in range(len(doctors[doctor]["patientsList"])):
-								if str(new['userID']) == str(doctors[doctor]["patientsList"][patient]["userID"]):
+								if str(new['userID']) == doctors[doctor]["patientsList"][patient]["userID"]:
 									founded = True
 									return "A patient with this ID already exists."
 					if founded != True:
-						for doctor in range(len(doctors)):
-							if str(uri[1]) == str(doctors[doctor]['userID']):
-								doctors[doctor]["patientsList"].append(new)
+						for doctor in doctors:
+							if str(uri[1]) == doctor['userID']:
+								doctor["patientsList"].append(new)
 								self.file["lastUpdate"]=time.strftime("%d-%m-%Y %H:%M:%S")
 								json.dump(self.file,open(self.filename,"w"),indent=4)
 								return "Patient registered."		
@@ -410,15 +411,3 @@ class RestAPI(object):
 				patients["patients"].append(self.file["doctorsList"][doctor]["patientsList"][patient])
 		return patients
 
-	# Removes all the devices with timestamp higher than two minutes. 
-	def deleteOld(self,addressCatalog):
-		doctors = requests.get(addressCatalog+"/doctors")
-		doctors = doctors.json()
-		for doctor in range(len(doctors['doctors'])):
-			for patient in range(len(doctors['doctors'][doctor]["patientsList"])):
-				devices = doctors['doctors'][doctor]["patientsList"][patient]["devicesList"]
-				for device in range(len(devices)):
-					if int(time.mktime(time.strptime(devices[device]['lastUpdate'],"%d-%m-%Y %H:%M:%S"))) + 60*2 < time.time():
-						requests.delete(addressCatalog+'/device/'+str(devices[device]['deviceID']))
-					else:
-						pass	
