@@ -3,6 +3,8 @@ import time
 import json
 import requests
 
+
+
 class Window:
     def __init__(self, clientID, topic,broker,port):
         self.client=MyMQTT(clientID,broker,port,self)
@@ -26,6 +28,16 @@ class Window:
         if self.status == 1:
             print(f'The window has been closed at time {time.strftime("%D %H:%M", time.localtime(int(timestamp)))}')
 
+    def register_me(self, addressCatalog): 
+        info_service = {
+                "name": "Window",
+                "endpoint": self.topic,
+                "protocol": "MQTT"
+        }
+        #payload = json.dumps(info_sensor) 
+        payload = info_service
+        r = requests.post(addressCatalog+"/microservice", json=payload)      
+
 if __name__ == "__main__":
     conf = json.load(open("settings.json"))
     catalogIP = conf["catalog_address"]
@@ -34,10 +46,10 @@ if __name__ == "__main__":
     baseTopic =  conf["baseTopic"]
 
     topic = baseTopic + "/+/+/Window"
-    test = Window("PM_monitoring_window",topic,broker,port)
-    test.start()
-    
+    service = Window("PM_monitoring_window",topic,broker,port)
+    service.start()
+    service.register_me(catalogIP)
     while True:
         time.sleep(1)
         
-	# test.stop()
+    service.stop()

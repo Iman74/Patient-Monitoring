@@ -4,7 +4,6 @@
     "baseTopic": "Patient_Monitor_2022",
     "catalog_address": "http://127.0.0.1:9090/api/",
     "telegramToken": "5354444090:AAGcdO3eaNI5I2pYCVx86zFDmuxQb8__Kus",
-    "QoS": "2",
     "admin": {
         "userID": "admin",
         "password": "admin"

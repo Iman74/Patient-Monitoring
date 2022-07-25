@@ -25,6 +25,15 @@ class CentralHeating:
             print(f'The central heating has been switched on {time.strftime("%D %H:%M", time.localtime(int(timestamp)))}')
         if self.status == 1:
             print(f'The central heating has been switched off {time.strftime("%D %H:%M", time.localtime(int(timestamp)))}')
+    def register_me(self, addressCatalog): 
+        info_service = {
+                "name": "Central Heating",
+                "endpoint": self.topic,
+                "protocol": "MQTT"
+        }
+        #payload = json.dumps(info_sensor) 
+        payload = info_service 
+        r = requests.post(addressCatalog+"/microservice", json=payload)      
 
 if __name__ == "__main__":
     conf = json.load(open("settings.json"))
@@ -34,10 +43,11 @@ if __name__ == "__main__":
     baseTopic =  conf["baseTopic"]
     
     topic = baseTopic + "/+/+/Heating"
-    test = CentralHeating("PM_monitoring_heating",topic,broker,port)
-    test.start()
-    
+    service = CentralHeating("PM_monitoring_heating",topic,broker,port)
+    service.start()
+    service.register_me(catalogIP)
+
     while True:
         time.sleep(1)
         
-	# test.stop()
+    service.stop()

@@ -128,7 +128,7 @@ def OxygenSensor(range_,sensorID,broker):
     info_sensor = {
                 "deviceID": sensorID, 
                 "deviceName": "SensorO",
-                "measureType": "heartrate",
+                "measureType": "oxygen",
                 "availableServices": "MQTT",
                 "servicesDetails": [{
                                     "serviceType": "MQTT",
@@ -162,7 +162,7 @@ def OxygenSensor(range_,sensorID,broker):
             message['e']['v'] = round(random.uniform(85,94), 0) 
             message['e']['t'] = time.time() 
         elif range_ == "acute_respiratory_failure": 
-            message['e']['v'] = round(random.uniform(50, 84), 0)   
+            message['e']['v'] = round(random.uniform(50, 84), 0)   #don't know if the minimum should be changed!!
             message['e']['t'] = time.time() 
         return message
     else:
@@ -284,11 +284,13 @@ if __name__ == "__main__":
     broker =  conf["broker"]
     port =  conf["port"]
     baseTopic =  conf["baseTopic"]
+    # sensors registered in the catalog:
+    sensors_dict = conf["sensors_dict"]
 
-    sensorID_o = "s_"+"0x01"
-    sensorID_rT = "s_"+"0x02"
-    sensorID_h = "s_"+"0x03"
-    sensorID_bT = "s_"+"0x04"
+    sensorID_o = sensors_dict["oxygen"]
+    sensorID_rT = sensors_dict["room temperature"]
+    sensorID_h = sensors_dict["heart rate"]
+    sensorID_bT = sensors_dict["body temperature"]
 
     sensor = Publisher(baseTopic,["/roomTemperature","/bodyTemperature",
                           "/heartRate","/oxygen"], broker, port)

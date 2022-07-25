@@ -1,5 +1,5 @@
 {
-    "lastUpdate": "24-07-2022 12:20:51",
+    "lastUpdate": "25-07-2022 11:31:27",
     "doctorsList": [
         {
             "name": "Sheldon Cooper",
@@ -19,7 +19,7 @@
                         {
                             "deviceID": "s_0x01",
                             "deviceName": "SensorO",
-                            "measureType": "heartrate",
+                            "measureType": "oxygen",
                             "availableServices": "MQTT",
                             "servicesDetails": [
                                 {
@@ -30,7 +30,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "24-07-2022 12:20:51"
+                            "lastUpdate": "25-07-2022 11:31:27"
                         },
                         {
                             "deviceID": "s_0x02",
@@ -46,7 +46,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "24-07-2022 12:20:51"
+                            "lastUpdate": "25-07-2022 11:31:27"
                         },
                         {
                             "deviceID": "s_0x03",
@@ -62,7 +62,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "24-07-2022 12:20:51"
+                            "lastUpdate": "25-07-2022 11:31:27"
                         },
                         {
                             "deviceID": "s_0x04",
@@ -78,7 +78,7 @@
                                     ]
                                 }
                             ],
-                            "lastUpdate": "24-07-2022 12:20:51"
+                            "lastUpdate": "25-07-2022 11:31:27"
                         }
                     ],
                     "lastUpdate": "23-07-2022 18:50:16"
@@ -133,8 +133,13 @@
     ],
     "microservices": [
         {
-            "name": "OpenWindows",
-            "endpoint": "192.123.123:9090",
+            "name": "Window",
+            "endpoint": "Patient_Monitor_2022/+/+/Window",
+            "protocol": "MQTT"
+        },
+        {
+            "name": "Central Heating",
+            "endpoint": "Patient_Monitor_2022/+/+/Heating",
             "protocol": "MQTT"
         }
     ],
